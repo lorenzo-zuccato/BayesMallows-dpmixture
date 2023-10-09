@@ -31,10 +31,6 @@ rank_dist_vec <- function(rankings, rho, metric, obs_freq) {
     .Call(`_BayesMallows_rank_dist_vec`, rankings, rho, metric, obs_freq)
 }
 
-initial_assignment_prob <- function(already_assigned, psi, n_clus) {
-    .Call(`_BayesMallows_initial_assignment_prob`, already_assigned, psi, n_clus)
-}
-
 #' Compute importance sampling estimates of log partition function
 #' for footrule and Spearman distances.
 #'
@@ -47,6 +43,10 @@ initial_assignment_prob <- function(already_assigned, psi, n_clus) {
 #'
 compute_importance_sampling_estimate <- function(alpha_vector, n_items, metric = "footrule", nmc = 1e4L) {
     .Call(`_BayesMallows_compute_importance_sampling_estimate`, alpha_vector, n_items, metric, nmc)
+}
+
+initialization <- function(n, psi) {
+    .Call(`_BayesMallows_initialization`, n, psi)
 }
 
 #' Compute the logarithm of the expected distance of metrics for a Mallows rank model

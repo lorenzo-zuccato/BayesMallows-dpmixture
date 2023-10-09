@@ -6,7 +6,7 @@ using namespace arma;
 // [[Rcpp::depends(RcppArmadillo)]]
 
 
-vec initial_assignment_prob(const uvec already_assigned, int psi, int n_clus){
+vec initial_assignment_prob(const uvec already_assigned, const int psi, const int n_clus){
     vec prob(n_clus + 1);
     for(int i = 0; i < n_clus; ++i){
         uvec elem_i = find(already_assigned == i);
@@ -16,7 +16,7 @@ vec initial_assignment_prob(const uvec already_assigned, int psi, int n_clus){
     return normalise(prob, 1);
 }
 
-uvec initialize_cluster_assignment(int n_assessors, int psi){
+uvec initialize_cluster_assignment(const int n_assessors, const int psi){
     uvec cluster_assignment(n_assessors);
     cluster_assignment(0) = 0;
     int n_clus = 1;
