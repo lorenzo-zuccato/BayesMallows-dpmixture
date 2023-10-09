@@ -31,6 +31,10 @@ rank_dist_vec <- function(rankings, rho, metric, obs_freq) {
     .Call(`_BayesMallows_rank_dist_vec`, rankings, rho, metric, obs_freq)
 }
 
+initial_assignment_prob <- function(already_assigned, psi, n_clus) {
+    .Call(`_BayesMallows_initial_assignment_prob`, already_assigned, psi, n_clus)
+}
+
 #' Compute importance sampling estimates of log partition function
 #' for footrule and Spearman distances.
 #'

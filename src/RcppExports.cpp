@@ -52,6 +52,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// initial_assignment_prob
+vec initial_assignment_prob(const uvec already_assigned, int psi, int n_clus);
+RcppExport SEXP _BayesMallows_initial_assignment_prob(SEXP already_assignedSEXP, SEXP psiSEXP, SEXP n_clusSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const uvec >::type already_assigned(already_assignedSEXP);
+    Rcpp::traits::input_parameter< int >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< int >::type n_clus(n_clusSEXP);
+    rcpp_result_gen = Rcpp::wrap(initial_assignment_prob(already_assigned, psi, n_clus));
+    return rcpp_result_gen;
+END_RCPP
+}
 // compute_importance_sampling_estimate
 arma::vec compute_importance_sampling_estimate(arma::vec alpha_vector, int n_items, std::string metric, int nmc);
 RcppExport SEXP _BayesMallows_compute_importance_sampling_estimate(SEXP alpha_vectorSEXP, SEXP n_itemsSEXP, SEXP metricSEXP, SEXP nmcSEXP) {
@@ -383,12 +396,13 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP run_testthat_tests(SEXP);
+RcppExport SEXP run_testthat_tests(void *);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_BayesMallows_get_rank_distance", (DL_FUNC) &_BayesMallows_get_rank_distance, 3},
     {"_BayesMallows_rank_dist_sum", (DL_FUNC) &_BayesMallows_rank_dist_sum, 4},
     {"_BayesMallows_rank_dist_vec", (DL_FUNC) &_BayesMallows_rank_dist_vec, 4},
+    {"_BayesMallows_initial_assignment_prob", (DL_FUNC) &_BayesMallows_initial_assignment_prob, 3},
     {"_BayesMallows_compute_importance_sampling_estimate", (DL_FUNC) &_BayesMallows_compute_importance_sampling_estimate, 4},
     {"_BayesMallows_log_expected_dist", (DL_FUNC) &_BayesMallows_log_expected_dist, 4},
     {"_BayesMallows_get_partition_function", (DL_FUNC) &_BayesMallows_get_partition_function, 5},
