@@ -70,7 +70,7 @@ void update_rho(cube& rho, vec& rho_acceptance, mat& rho_old,
                 int& rho_index, const int& cluster_index, const int& rho_thinning,
                 const double& alpha_old, const int& leap_size, const mat& rankings,
                 const std::string& metric, const int& n_items, const int& t,
-                const uvec& element_indices, const vec& obs_freq) {
+                const uvec& element_indices, const vec& obs_freq, const int min_index = 0) {
   vec rho_cluster = rho_old.col(cluster_index);
 
   // Sample a rank proposal
@@ -99,7 +99,7 @@ void update_rho(cube& rho, vec& rho_acceptance, mat& rho_old,
 
   // Save rho if appropriate
   if(t % rho_thinning == 0){
-    if(cluster_index == 0) ++rho_index;
+    if(cluster_index == min_index) ++rho_index;
     rho.slice(rho_index).col(cluster_index) = rho_old.col(cluster_index);
   }
 
