@@ -10,8 +10,7 @@ using namespace arma;
 //' @inheritParams get_exponent_sum
 //' @param leap_size Integer specifying the step size of the leap-and-shift
 //' proposal distribution.
-//' @export
-//' @author Anja Stein
+//' @noRd
 //' @examples
 //' rho <- t(c(1,2,3,4,5,6))
 //' alpha <- 2

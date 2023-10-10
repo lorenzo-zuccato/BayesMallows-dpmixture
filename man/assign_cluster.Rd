@@ -42,4 +42,21 @@ posterior probability.
 }
 \seealso{
 \code{\link{compute_mallows}} for an example where this function is used.
+
+Other posterior quantities: 
+\code{\link{compute_consensus.BayesMallows}()},
+\code{\link{compute_consensus.SMCMallows}()},
+\code{\link{compute_consensus}()},
+\code{\link{compute_posterior_intervals.BayesMallows}()},
+\code{\link{compute_posterior_intervals.SMCMallows}()},
+\code{\link{compute_posterior_intervals}()},
+\code{\link{heat_plot}()},
+\code{\link{plot.BayesMallows}()},
+\code{\link{plot.SMCMallows}()},
+\code{\link{plot_elbow}()},
+\code{\link{plot_top_k}()},
+\code{\link{predict_top_k}()},
+\code{\link{print.BayesMallowsMixtures}()},
+\code{\link{print.BayesMallows}()}
 }
+\concept{posterior quantities}

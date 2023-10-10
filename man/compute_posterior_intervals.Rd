@@ -7,7 +7,7 @@
 compute_posterior_intervals(model_fit, ...)
 }
 \arguments{
-\item{model_fit}{An object returned from \code{\link{compute_mallows}}.}
+\item{model_fit}{A model object.}
 
 \item{...}{other arguments passed to methods.}
 }
@@ -56,4 +56,21 @@ compute_posterior_intervals(model_fit, parameter = "rho")
 }
 \seealso{
 \code{\link{compute_mallows}}
+
+Other posterior quantities: 
+\code{\link{assign_cluster}()},
+\code{\link{compute_consensus.BayesMallows}()},
+\code{\link{compute_consensus.SMCMallows}()},
+\code{\link{compute_consensus}()},
+\code{\link{compute_posterior_intervals.BayesMallows}()},
+\code{\link{compute_posterior_intervals.SMCMallows}()},
+\code{\link{heat_plot}()},
+\code{\link{plot.BayesMallows}()},
+\code{\link{plot.SMCMallows}()},
+\code{\link{plot_elbow}()},
+\code{\link{plot_top_k}()},
+\code{\link{predict_top_k}()},
+\code{\link{print.BayesMallowsMixtures}()},
+\code{\link{print.BayesMallows}()}
 }
+\concept{posterior quantities}
