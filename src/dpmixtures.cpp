@@ -31,18 +31,19 @@ uvec initialize_cluster_assignment(const int n_assessors, const int psi){
 
 uvec update_cluster_labels_dpmixture(
     //const mat& dist_mat,
-    const uvec& current_cluster_assignment;
-    const uvec& current_clusters;
-    const int& current_n_clusters;
+    const uvec& current_cluster_assignment,
+    uvec& current_clusters,
+    int& current_n_clusters,
+    int& max_cluster_index,
     const vec& alpha_old,
     const int& n_items,
+    const int& log_fact_n_items,
     const int& t,
     const std::string& metric,
     const Rcpp::Nullable<vec> cardinalities = R_NilValue,
     const Rcpp::Nullable<vec> logz_estimate = R_NilValue,
 ){
   int n_assessors = dist_mat.n_rows;
-  long n_item_factorial = factorial(n_items);
   uvec new_cluster_assignment(n_assessors);
   int n_in_cluster, cluster_index;
   vec assignment_probabilities;
@@ -54,7 +55,7 @@ uvec update_cluster_labels_dpmixture(
         n_in_cluster = n_elem_in_cluster(current_cluster_assignment, n_assessors, cluster_index, i);
         assignment_probabilities(i) = std::log(n_in_cluster) - std::log(psi + n_assessors - 1) -
           get_partition_function(n_items, alpha_old(cluster_index), cardinalities, logz_estimate, metric) -
-          alpha.old(cluster_index) / n_items * //!SOME DISTANCE HERE MISSING;
+          alpha.old(cluster_index) / n_items * DISTANCE//!SOME DISTANCE HERE MISSING;
     }
   }
 
@@ -94,9 +95,9 @@ int n_elem_in_cluster(const uvec& current_cluster_assignment,
   return c;
 }
 
-long factorial(const int n){
-    long f = 1;
+double  log_factorial(const int n){
+    double f = 0;
     for (int i=1; i<=n; ++i)
-        f *= i;
+        f += std::log(i);
     return f;
 }
