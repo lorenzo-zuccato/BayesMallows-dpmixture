@@ -67,14 +67,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // initialization
-arma::uvec initialization(int n, int psi);
-RcppExport SEXP _BayesMallows_initialization(SEXP nSEXP, SEXP psiSEXP) {
+arma::uvec initialization(int n, int psi, int& palla);
+RcppExport SEXP _BayesMallows_initialization(SEXP nSEXP, SEXP psiSEXP, SEXP pallaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< int >::type psi(psiSEXP);
-    rcpp_result_gen = Rcpp::wrap(initialization(n, psi));
+    Rcpp::traits::input_parameter< int& >::type palla(pallaSEXP);
+    rcpp_result_gen = Rcpp::wrap(initialization(n, psi, palla));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -402,7 +403,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_BayesMallows_rank_dist_sum", (DL_FUNC) &_BayesMallows_rank_dist_sum, 4},
     {"_BayesMallows_rank_dist_vec", (DL_FUNC) &_BayesMallows_rank_dist_vec, 4},
     {"_BayesMallows_compute_importance_sampling_estimate", (DL_FUNC) &_BayesMallows_compute_importance_sampling_estimate, 4},
-    {"_BayesMallows_initialization", (DL_FUNC) &_BayesMallows_initialization, 2},
+    {"_BayesMallows_initialization", (DL_FUNC) &_BayesMallows_initialization, 3},
     {"_BayesMallows_log_expected_dist", (DL_FUNC) &_BayesMallows_log_expected_dist, 4},
     {"_BayesMallows_get_partition_function", (DL_FUNC) &_BayesMallows_get_partition_function, 5},
     {"_BayesMallows_asymptotic_partition_function", (DL_FUNC) &_BayesMallows_asymptotic_partition_function, 6},

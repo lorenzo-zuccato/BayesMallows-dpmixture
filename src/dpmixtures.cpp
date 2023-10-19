@@ -1,5 +1,7 @@
 #include <RcppArmadillo.h>
 #include "sample.h"
+#include "partitionfuns.h"
+#include "distances.h"
 #include "misc.h"
 
 using namespace arma;
