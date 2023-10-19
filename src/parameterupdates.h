@@ -22,7 +22,7 @@ void update_rho(arma::cube& rho, arma::vec& rho_acceptance, arma::mat& rho_old,
                 int& rho_index, const int& cluster_index, const int& rho_thinning,
                 const double& alpha_old, const int& leap_size, const arma::mat& rankings,
                 const std::string& metric, const int& n_items, const int& t,
-                const arma::uvec& element_indices, const arma::vec& obs_freq, const int& min_index);
+                const arma::uvec& element_indices, const arma::vec& obs_freq, const int& min_index = 0);
 
 
 

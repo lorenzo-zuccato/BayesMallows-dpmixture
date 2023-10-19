@@ -24,6 +24,19 @@ double rtruncbeta(int shape1, int shape2, double trunc = 1) {
   return x;
 }
 
+// Truncated exponential distribution
+double rtruncexp(double lambda, double trunc){
+  int i = 0;
+  double x;
+  while(i < 1000){
+    x = Rcpp::rexp(1, lambda)(0);
+
+    if(x < trunc) break;
+    ++i;
+  }
+  return x;
+}
+
 uvec maybe_offset_indices(
   vec& x,
   uvec idx_x,
