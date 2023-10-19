@@ -3,6 +3,7 @@
 #include "partitionfuns.h"
 #include "distances.h"
 #include "misc.h"
+#include "rmallows.h"
 
 using namespace arma;
 
@@ -50,7 +51,7 @@ double  log_factorial(const int n){
     return f;
 }
 
-uvec update_cluster_labels_dpmixture(const mat& rankings
+uvec update_cluster_labels_dpmixture(const mat& rankings,
                                     const vec& obs_freq,
                                     cube& rho,
                                     mat& rho_old,
@@ -59,7 +60,7 @@ uvec update_cluster_labels_dpmixture(const mat& rankings
                                     const uvec& current_cluster_assignment,
                                     uvec& current_clusters,
                                     int& current_n_clusters,
-                                    int& max_cluster_index,
+                                    unsigned int& max_cluster_index,
                                     const int& n_items,
                                     const double& log_fact_n_items,
                                     const double& lambda,
@@ -69,7 +70,7 @@ uvec update_cluster_labels_dpmixture(const mat& rankings
                                     const std::string& metric,
                                     const Rcpp::Nullable<vec> cardinalities = R_NilValue,
                                     const Rcpp::Nullable<vec> logz_estimate = R_NilValue){
-  int n_assessors = dist_mat.n_rows;
+  int n_assessors = rankings.n_rows;
   bool disappearing_cluster = false;
   unsigned int cluster_index, disappearing_cluster_index;
   uvec new_cluster_assignment(n_assessors);
@@ -102,11 +103,11 @@ uvec update_cluster_labels_dpmixture(const mat& rankings
     // Calculating distances of assessor i from current cluster consensus
     dist = rank_dist_vec(rho_old_temp, rankings.col(i), metric, obs_freq); //!CHECK THAT THIS FUNCTION IS CORRECT, STRANGE BEHAVIOUR WITH OBS_FREQ
     // Compute the logarithm of the unnormalized probability
-    assignment_probabilities.subvec(0, current_n_clusters - 1) = std::log(n_in_cluster) - std::log(psi + n_assessors -1)
+    assignment_probabilities.subvec(0, current_n_clusters - 1) = log(n_in_cluster) - std::log(psi + n_assessors -1)
                                         - part_fun - alpha_old_temp / n_items * dist;
     assignment_probabilities(current_n_clusters) = std::log(psi) - log_fact_n_items - std::log(psi + n_assessors - 1);
     // Exponentiate to get unnormalized prob relative to max
-    vec probs = exp(assignment_probabilities - max(assignment_probabilities));
+    vec prob = exp(assignment_probabilities - max(assignment_probabilities));
     assignment_probabilities = normalise(prob, 1);
 
     // Setting up possible cluster labels
@@ -114,7 +115,7 @@ uvec update_cluster_labels_dpmixture(const mat& rankings
     possible_clusters(current_n_clusters) = max_cluster_index + 1;
 
     // Sampling new cluster for assessor i
-    new_cluster_assignment(i) = sample(possible_clusters, 1, false, assignment_probabilities);
+    new_cluster_assignment(span(i)) = sample(possible_clusters, 1, false, assignment_probabilities);
 
     // Updating current clusters
     current_clusters = unique(new_cluster_assignment);
@@ -139,8 +140,8 @@ uvec update_cluster_labels_dpmixture(const mat& rankings
 
     // Deleting parameters of the disappearing cluster
     if(disappearing_cluster){
-        rho_old.col(disappearing_cluster).fill(datum::nan);
-        alpha_old(disappearing_cluster) = datum::nan;
+        rho_old.col(disappearing_cluster_index).fill(datum::nan);
+        alpha_old(disappearing_cluster_index) = datum::nan;
     }
   }
   return new_cluster_assignment;
