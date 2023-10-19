@@ -182,6 +182,48 @@ run_mcmc <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_e
     .Call(`_BayesMallows_run_mcmc`, rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric, error_model, Lswap, n_clusters, include_wcd, leap_size, alpha_prop_sd, alpha_init, alpha_jump, lambda, alpha_max, psi, rho_thinning, aug_thinning, clus_thin, save_aug, verbose, kappa_1, kappa_2, save_ind_clus)
 }
 
+#' Worker function for computing the posterior distribution.
+#'
+#' @param rankings A set of complete rankings, with one sample per column.
+#' With n_assessors samples and n_items items, rankings is n_items x n_assessors.
+#' @param obs_freq  A vector of observation frequencies (weights) to apply to the rankings.
+#' @param nmc Number of Monte Carlo samples.
+#' @param constraints List of lists of lists, returned from `generate_constraints`.
+#' @param cardinalities Used when metric equals \code{"footrule"} or
+#' \code{"spearman"} for computing the partition function. Defaults to
+#' \code{R_NilValue}.
+#' @param logz_estimate Estimate of the log partition function.
+#' @param metric The distance metric to use. One of \code{"spearman"},
+#' \code{"footrule"}, \code{"kendall"}, \code{"cayley"}, or
+#' \code{"hamming"}.
+#' @param error_model Error model to use.
+#' @param Lswap Swap parameter used by Swap proposal for proposing rank augmentations in the case of non-transitive pairwise comparisons.
+#' @param leap_size Leap-and-shift step size.
+#' @param alpha_prop_sd Standard deviation of proposal distribution for alpha.
+#' @param alpha_init Initial value of alpha.
+#' @param alpha_jump How many times should we sample \code{rho} between
+#' each time we sample \code{alpha}. Setting \code{alpha_jump} to a high
+#' number can significantly speed up computation time, since we then do not
+#' have to do expensive computation of the partition function.
+#' @param lambda Parameter of the prior distribution.
+#' @param alpha_max Maximum value of \code{alpha}, used for truncating the exponential prior distribution.
+#' @param psi Hyperparameter for the Dirichlet prior distribution used in clustering.
+#' @param rho_thinning Thinning parameter. Keep only every \code{rho_thinning} rank
+#' sample from the posterior distribution.
+#' @param aug_thinning Integer specifying the thinning for data augmentation.
+#' @param clus_thin Integer specifying the thinning for saving cluster assignments.
+#' @param save_aug Whether or not to save the augmented data every
+#' \code{aug_thinning}th iteration.
+#' @param verbose Logical specifying whether to print out the progress of the
+#' Metropolis-Hastings algorithm. If \code{TRUE}, a notification is printed every
+#' 1000th iteration.
+#' @param kappa_1 Hyperparameter for \eqn{theta} in the Bernoulli error model. Defaults to 1.0.
+#' @param kappa_2 Hyperparameter for \eqn{theta} in the Bernoulli error model. Defaults to 1.0.
+#'
+run_mcmc_dpmixture <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric = "footrule", error_model = "none", Lswap = 1L, leap_size = 1L, alpha_prop_sd = 0.5, alpha_init = 5, alpha_jump = 1L, lambda = 0.1, alpha_max = 1e6, psi = 10L, rho_thinning = 1L, aug_thinning = 1L, clus_thin = 1L, save_aug = FALSE, verbose = FALSE, kappa_1 = 1.0, kappa_2 = 1.0) {
+    .Call(`_BayesMallows_run_mcmc_dpmixture`, rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric, error_model, Lswap, leap_size, alpha_prop_sd, alpha_init, alpha_jump, lambda, alpha_max, psi, rho_thinning, aug_thinning, clus_thin, save_aug, verbose, kappa_1, kappa_2)
+}
+
 #' @title Calculate Backward Probability
 #' @description Function to calculate probability of assigning a set of specific ranks to an specific item
 #' given its rank in the consensus ranking

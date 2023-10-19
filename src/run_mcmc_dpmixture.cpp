@@ -28,9 +28,6 @@ using namespace arma;
 //' \code{"hamming"}.
 //' @param error_model Error model to use.
 //' @param Lswap Swap parameter used by Swap proposal for proposing rank augmentations in the case of non-transitive pairwise comparisons.
-//' @param n_clusters Number of clusters. Defaults to 1.
-//' @param include_wcd Boolean defining whether or
-//' not to store the within-cluster distance.
 //' @param leap_size Leap-and-shift step size.
 //' @param alpha_prop_sd Standard deviation of proposal distribution for alpha.
 //' @param alpha_init Initial value of alpha.
@@ -52,35 +49,30 @@ using namespace arma;
 //' 1000th iteration.
 //' @param kappa_1 Hyperparameter for \eqn{theta} in the Bernoulli error model. Defaults to 1.0.
 //' @param kappa_2 Hyperparameter for \eqn{theta} in the Bernoulli error model. Defaults to 1.0.
-//' @param save_ind_clus Whether or not to save the individual cluster probabilities in each step,
-//' thinned as specified in argument \code{clus_thin}. This results in csv files \code{cluster_probs1.csv},
-//' \code{cluster_probs2.csv}, ..., being saved in the calling directory. This option may slow down the code
-//' considerably, but is necessary for detecting label switching using Stephen's algorithm.
-//' @keywords internal
 //'
 // [[Rcpp::export]]
-Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
-                    Rcpp::List constraints,
-                    Rcpp::Nullable<arma::vec> cardinalities,
-                    Rcpp::Nullable<arma::vec> logz_estimate,
-                    Rcpp::Nullable<arma::mat> rho_init,
-                    std::string metric = "footrule",
-                    std::string error_model = "none",
-                    int Lswap = 1,
-                    int leap_size = 1,
-                    double alpha_prop_sd = 0.5,
-                    double alpha_init = 5,
-                    int alpha_jump = 1,
-                    double lambda = 0.1,
-                    double alpha_max = 1e6,
-                    int psi = 10,
-                    int rho_thinning = 1,
-                    int aug_thinning = 1,
-                    int clus_thin = 1,
-                    bool save_aug = false,
-                    bool verbose = false,
-                    double kappa_1 = 1.0,
-                    double kappa_2 = 1.0){
+Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
+                            Rcpp::List constraints,
+                            Rcpp::Nullable<arma::vec> cardinalities,
+                            Rcpp::Nullable<arma::vec> logz_estimate,
+                            Rcpp::Nullable<arma::mat> rho_init,
+                            std::string metric = "footrule",
+                            std::string error_model = "none",
+                            int Lswap = 1,
+                            int leap_size = 1,
+                            double alpha_prop_sd = 0.5,
+                            double alpha_init = 5,
+                            int alpha_jump = 1,
+                            double lambda = 0.1,
+                            double alpha_max = 1e6,
+                            int psi = 10,
+                            int rho_thinning = 1,
+                            int aug_thinning = 1,
+                            int clus_thin = 1,
+                            bool save_aug = false,
+                            bool verbose = false,
+                            double kappa_1 = 1.0,
+                            double kappa_2 = 1.0){
   // The number of items ranked
   int n_items = rankings.n_rows;
 
@@ -117,7 +109,7 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
 
   uvec n_clusters(n_cluster_assignments);
   uvec current_clusters = unique(current_cluster_assignment);
-  n_clusters(0) = current.clusters.n_elem;
+  n_clusters(0) = current_clusters.n_elem;
   int current_n_clusters = n_clusters(0);
   unsigned int max_cluster_index = current_clusters.max();
   unsigned int min_cluster_index = 0;
@@ -192,7 +184,7 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
       theta(t) = rtruncbeta(shape_1(t), shape_2(t), 0.5);
     }
 
-    for(vec::iterator i = current_clusters.begin(); i != current_clusters.end(); ++i){
+    for(uvec::iterator i = current_clusters.begin(); i != current_clusters.end(); ++i){
       update_rho(rho, rho_acceptance, rho_old, rho_index, *i,
                  rho_thinning, alpha_old(*i), leap_size,
                  rankings.submat(element_indices, find(current_cluster_assignment == *i)),
@@ -201,7 +193,7 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
 
     if(t % alpha_jump == 0) {
       ++alpha_index;
-      for(vec::iterator i = current_clusters.begin(); i != current_clusters.end(); ++i){
+      for(uvec::iterator i = current_clusters.begin(); i != current_clusters.end(); ++i){
         alpha(*i, alpha_index) = update_alpha(alpha_acceptance, alpha_old(*i),
               rankings.submat(element_indices, find(current_cluster_assignment == *i)),
               obs_freq(find(current_cluster_assignment == *i)),
@@ -219,6 +211,7 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
     if(t % clus_thin == 0){
       ++cluster_assignment_index;
       cluster_assignment.col(cluster_assignment_index) = current_cluster_assignment;
+      n_clusters(cluster_assignment_index) = current_n_clusters;
     }
 
     // Perform data augmentation of missing ranks, if needed
@@ -229,7 +222,7 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
 
     // Perform data augmentation of pairwise comparisons, if needed
     if(augpair){
-      augment_pairwise(rankings, current_cluster_assignment, alpha_old, 0.1, rho_old,
+      augment_pairwise(rankings, current_cluster_assignment, alpha_old, 0.1, rho_old, //!!!!!ERRORE CON CLUSTERING!
                          metric, constraints, aug_acceptance, clustering, error_model, Lswap);
     }
 
