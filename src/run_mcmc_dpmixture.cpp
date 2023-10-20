@@ -222,8 +222,8 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
 
     // Perform data augmentation of pairwise comparisons, if needed
     if(augpair){
-      augment_pairwise(rankings, current_cluster_assignment, alpha_old, 0.1, rho_old, //!!!!!ERRORE CON CLUSTERING!
-                         metric, constraints, aug_acceptance, clustering, error_model, Lswap);
+      augment_pairwise(rankings, current_cluster_assignment, alpha_old, 0.1, rho_old,
+                         metric, constraints, aug_acceptance, error_model, Lswap);
     }
 
     // Save augmented data if the user wants this. Uses the same index as rho.
