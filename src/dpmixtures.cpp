@@ -101,7 +101,7 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
         rho_old_temp.col(j) = rho_old.col(cluster_index);
     }
     // Calculating distances of assessor i from current cluster consensus
-    dist = rank_dist_vec(rho_old_temp, rankings.col(i), metric, obs_freq); //!CHECK THAT THIS FUNCTION IS CORRECT, STRANGE BEHAVIOUR WITH OBS_FREQ
+    dist = rank_dist_vec(rho_old_temp, rankings.col(i), metric, ones(current_n_clusters));
     // Compute the logarithm of the unnormalized probability
     assignment_probabilities.subvec(0, current_n_clusters - 1) = log(n_in_cluster) - std::log(psi + n_assessors -1)
                                         - part_fun - alpha_old_temp / n_items * dist;
