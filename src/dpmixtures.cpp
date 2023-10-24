@@ -55,8 +55,11 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
                                     const vec& obs_freq,
                                     cube& rho,
                                     mat& rho_old,
+                                    mat& rho_acceptance,
                                     mat& alpha,
                                     vec& alpha_old,
+                                    mat& alpha_acceptance,
+                                    const int& nmc,
                                     const uvec& current_cluster_assignment,
                                     uvec& current_clusters,
                                     int& current_n_clusters,
@@ -128,10 +131,12 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
         rho.resize(n_items, max_cluster_index + 1, rho.n_slices);
         rho(span::all, span(max_cluster_index ), span::all).fill(datum::nan);
         rho_old.resize(n_items, max_cluster_index + 1);
+        rho_acceptance.resize(nmc - 1, max_cluster_index + 1);
 
         alpha.resize(max_cluster_index - 1, alpha.n_cols);
         alpha.row(max_cluster_index).fill(datum::nan);
         alpha_old.resize(max_cluster_index + 1);
+        alpha_acceptance.resize(nmc - 1, max_cluster_index + 1);
 
         alpha_old(max_cluster_index) = rtruncexp(lambda, alpha_max);
         rho_old.col(max_cluster_index) = rmallows(rankings.col(i), obs_freq, alpha_old(max_cluster_index),

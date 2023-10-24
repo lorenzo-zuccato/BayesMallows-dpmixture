@@ -141,8 +141,10 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
 
 
   // Declare indicator vectors to hold acceptance or not
-  vec alpha_acceptance = ones(n_clusters);
-  vec rho_acceptance = ones(n_clusters);
+  mat alpha_acceptance(nmc - 1, n_clusters);
+  alpha_acceptance.fill(datum::nan);
+  mat rho_acceptance(nmc - 1, n_clusters);
+  rho_acceptance.fill(datum::nan);
 
   vec aug_acceptance;
   if(any_missing | augpair){
@@ -205,7 +207,7 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
         alpha(i, alpha_index) = update_alpha(alpha_acceptance, alpha_old(i),
               clustering ? rankings.submat(element_indices, find(current_cluster_assignment == i)) : rankings,
               clustering ? obs_freq(find(current_cluster_assignment == i)) : obs_freq,
-              i, rho_old.col(i), alpha_prop_sd, metric, lambda, cardinalities, logz_estimate, alpha_max);
+              i, rho_old.col(i), alpha_prop_sd, metric, lambda, t, cardinalities, logz_estimate, alpha_max);
       }
       // Update alpha_old
       alpha_old = alpha.col(alpha_index);
@@ -253,14 +255,29 @@ Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc,
     }
   }
 
+  vec alpha_acceptance_prob = ones(n_clusters);
+  vec rho_acceptance_prob = ones(n_clusters);
+  vec b;
+  uvec temp_indices;
+
+  for(int i = 0; i < n_clusters; ++i){
+    b = alpha_acceptance.col(i);
+    temp_indices = find_finite(b);
+    alpha_acceptance_prob(i) = sum(b(temp_indices)) / temp_indices.n_elem;
+
+    b = rho_acceptance.col(i);
+    temp_indices = find_finite(b);
+    rho_acceptance_prob(i) = sum(b(temp_indices)) / temp_indices.n_elem;
+  }
+
 
 
   // Return everything that might be of interest
   return Rcpp::List::create(
     Rcpp::Named("rho") = rho,
-    Rcpp::Named("rho_acceptance") = rho_acceptance / nmc,
+    Rcpp::Named("rho_acceptance") = rho_acceptance_prob,
     Rcpp::Named("alpha") = alpha,
-    Rcpp::Named("alpha_acceptance") = alpha_acceptance / nmc,
+    Rcpp::Named("alpha_acceptance") = alpha_acceptance_prob,
     Rcpp::Named("theta") = theta,
     Rcpp::Named("shape1") = shape_1,
     Rcpp::Named("shape2") = shape_2,

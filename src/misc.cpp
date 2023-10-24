@@ -29,7 +29,7 @@ double rtruncexp(double lambda, double trunc){
   int i = 0;
   double x;
   while(i < 1000){
-    x = randu();
+    x = randu<double>();
     x = - std::log(x - 1) / lambda;
     if(x < trunc) break;
     ++i;

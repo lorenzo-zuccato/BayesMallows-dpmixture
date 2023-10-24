@@ -133,8 +133,10 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
   }
 
   // Declare indicator vectors to hold acceptance or not
-  vec alpha_acceptance = ones(current_n_clusters);
-  vec rho_acceptance = ones(current_n_clusters);
+  mat alpha_acceptance(nmc - 1, current_n_clusters);
+  alpha_acceptance.fill(datum::nan);
+  mat rho_acceptance(nmc - 1, current_n_clusters);
+  rho_acceptance.fill(datum::nan);
 
   vec aug_acceptance;
   if(any_missing | augpair){
@@ -197,13 +199,14 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
         alpha(*i, alpha_index) = update_alpha(alpha_acceptance, alpha_old(*i),
               rankings.submat(element_indices, find(current_cluster_assignment == *i)),
               obs_freq(find(current_cluster_assignment == *i)),
-              *i, rho_old.col(*i), alpha_prop_sd, metric, lambda, cardinalities, logz_estimate, alpha_max);
+              *i, rho_old.col(*i), alpha_prop_sd, metric, lambda, t, cardinalities, logz_estimate, alpha_max);
       }
       // Update alpha_old
       alpha_old = alpha.col(alpha_index);
     }
 
-    current_cluster_assignment = update_cluster_labels_dpmixture(rankings, obs_freq, rho, rho_old, alpha, alpha_old,
+    current_cluster_assignment = update_cluster_labels_dpmixture(rankings, obs_freq, rho, rho_old, rho_acceptance,
+                                                                 alpha, alpha_old, alpha_acceptance, nmc,
                                                                  current_cluster_assignment, current_clusters, current_n_clusters,
                                                                  max_cluster_index, n_items, log_fact_n_item, lambda, alpha_max, psi,
                                                                  leap_size, metric, cardinalities, logz_estimate);
@@ -233,12 +236,27 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
     }
   }
 
+  vec alpha_acceptance_prob = ones(max_cluster_index);
+  vec rho_acceptance_prob = ones(max_cluster_index);
+  vec b;
+  uvec temp_indices;
+
+  for(unsigned int i = 0; i < max_cluster_index; ++i){
+    b = alpha_acceptance.col(i);
+    temp_indices = find_finite(b);
+    alpha_acceptance_prob(i) = sum(b(temp_indices)) / temp_indices.n_elem;
+
+    b = rho_acceptance.col(i);
+    temp_indices = find_finite(b);
+    rho_acceptance_prob(i) = sum(b(temp_indices)) / temp_indices.n_elem;
+  }
+
   // Return everything that might be of interest
   return Rcpp::List::create(
     Rcpp::Named("rho") = rho,
-    //Rcpp::Named("rho_acceptance") = rho_acceptance / nmc,
+    Rcpp::Named("rho_acceptance") = rho_acceptance_prob,
     Rcpp::Named("alpha") = alpha,
-    //Rcpp::Named("alpha_acceptance") = alpha_acceptance / nmc,
+    Rcpp::Named("alpha_acceptance") = alpha_acceptance_prob,
     Rcpp::Named("theta") = theta,
     Rcpp::Named("shape1") = shape_1,
     Rcpp::Named("shape2") = shape_2,
