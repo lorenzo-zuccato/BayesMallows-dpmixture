@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include "dpmixtures.h"
+#include "rmallows.h"
 
 using namespace arma;
 
@@ -7,8 +8,13 @@ using namespace arma;
 
 // [[Rcpp::export]]
 
-arma::uvec initialization(int n, int psi){
-    arma::uvec init(n);
-    init = initialize_cluster_assignment(n, psi);
+arma::mat initialization(int n_samples){
+    arma::mat init(4,n_samples);
+    arma::vec rho0(4);
+    rho0(0)=1;
+    rho0(1)=2;
+    rho0(2)=3;
+    rho0(3)=4;
+    init = rmallows(rho0, ones(1), 1, n_samples, 10, 1);
     return init;
 }

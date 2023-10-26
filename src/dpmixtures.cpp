@@ -139,7 +139,7 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
         alpha_acceptance.resize(nmc - 1, max_cluster_index + 1);
 
         alpha_old(max_cluster_index) = rtruncexp(lambda, alpha_max);
-        rho_old.col(max_cluster_index) = rmallows(rankings.col(i), obs_freq, alpha_old(max_cluster_index),
+        rho_old.col(max_cluster_index) = rmallows(rankings.col(i), ones(1), alpha_old(max_cluster_index),
                                                   1, 1000*std::log(n_items), 0, leap_size, metric);
     }
 
