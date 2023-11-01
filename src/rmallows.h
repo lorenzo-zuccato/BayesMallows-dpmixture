@@ -4,7 +4,6 @@
 #include "RcppArmadillo.h"
 arma::mat rmallows(
     arma::vec rho0,
-    arma::vec obs_freq,
     double alpha0,
     int n_samples,
     int burnin,

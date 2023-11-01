@@ -13,7 +13,6 @@ int cluster_count_excluding_i(const arma::uvec& current_cluster_assignment,
 double  log_factorial(const int n);
 
 arma::uvec update_cluster_labels_dpmixture(const arma::mat& rankings,
-                                    const arma::vec& obs_freq,
                                     arma::cube& rho,
                                     arma::mat& rho_old,
                                     arma::mat& rho_acceptance,

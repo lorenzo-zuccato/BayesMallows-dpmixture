@@ -205,7 +205,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
       alpha_old = alpha.col(alpha_index);
     }
 
-    current_cluster_assignment = update_cluster_labels_dpmixture(rankings, obs_freq, rho, rho_old, rho_acceptance,
+    current_cluster_assignment = update_cluster_labels_dpmixture(rankings, rho, rho_old, rho_acceptance,
                                                                  alpha, alpha_old, alpha_acceptance, nmc,
                                                                  current_cluster_assignment, current_clusters, current_n_clusters,
                                                                  max_cluster_index, n_items, log_fact_n_item, lambda, alpha_max, psi,

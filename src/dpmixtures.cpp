@@ -52,7 +52,6 @@ double  log_factorial(const int n){
 }
 
 uvec update_cluster_labels_dpmixture(const mat& rankings,
-                                    const vec& obs_freq,
                                     cube& rho,
                                     mat& rho_old,
                                     mat& rho_acceptance,
@@ -139,8 +138,8 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
         alpha_acceptance.resize(nmc - 1, max_cluster_index + 1);
 
         alpha_old(max_cluster_index) = rtruncexp(lambda, alpha_max);
-        rho_old.col(max_cluster_index) = rmallows(rankings.col(i), ones(1), alpha_old(max_cluster_index),
-                                                  1, 1000*std::log(n_items), 0, leap_size, metric);
+        rho_old.col(max_cluster_index) = rmallows(rankings.col(i), alpha_old(max_cluster_index),
+                                                  1, 1000*std::log(n_items), 1, leap_size, metric);
     }
 
     // Deleting parameters of the disappearing cluster

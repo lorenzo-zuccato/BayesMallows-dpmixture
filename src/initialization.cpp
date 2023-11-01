@@ -15,6 +15,6 @@ arma::mat initialization(int n_samples){
     rho0(1)=2;
     rho0(2)=3;
     rho0(3)=4;
-    init = rmallows(rho0, ones(1), 1, n_samples, 10, 1);
+    init = rmallows(rho0, 1, n_samples, 10, 1);
     return init;
 }
