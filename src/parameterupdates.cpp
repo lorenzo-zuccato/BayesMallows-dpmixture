@@ -106,5 +106,4 @@ void update_rho(cube& rho, mat& rho_acceptance, mat& rho_old,
     if(cluster_index == min_index) ++rho_index;
     rho.slice(rho_index).col(cluster_index) = rho_old.col(cluster_index);
   }
-
 }

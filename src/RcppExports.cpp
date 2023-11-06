@@ -67,13 +67,24 @@ BEGIN_RCPP
 END_RCPP
 }
 // initialization
-arma::mat initialization(int n_samples);
-RcppExport SEXP _BayesMallows_initialization(SEXP n_samplesSEXP) {
+arma::uvec initialization();
+RcppExport SEXP _BayesMallows_initialization() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n_samples(n_samplesSEXP);
-    rcpp_result_gen = Rcpp::wrap(initialization(n_samples));
+    rcpp_result_gen = Rcpp::wrap(initialization());
+    return rcpp_result_gen;
+END_RCPP
+}
+// rtruncexp
+double rtruncexp(double lambda, double trunc);
+RcppExport SEXP _BayesMallows_rtruncexp(SEXP lambdaSEXP, SEXP truncSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type trunc(truncSEXP);
+    rcpp_result_gen = Rcpp::wrap(rtruncexp(lambda, trunc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -434,7 +445,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_BayesMallows_rank_dist_sum", (DL_FUNC) &_BayesMallows_rank_dist_sum, 4},
     {"_BayesMallows_rank_dist_vec", (DL_FUNC) &_BayesMallows_rank_dist_vec, 4},
     {"_BayesMallows_compute_importance_sampling_estimate", (DL_FUNC) &_BayesMallows_compute_importance_sampling_estimate, 4},
-    {"_BayesMallows_initialization", (DL_FUNC) &_BayesMallows_initialization, 1},
+    {"_BayesMallows_initialization", (DL_FUNC) &_BayesMallows_initialization, 0},
+    {"_BayesMallows_rtruncexp", (DL_FUNC) &_BayesMallows_rtruncexp, 2},
     {"_BayesMallows_log_expected_dist", (DL_FUNC) &_BayesMallows_log_expected_dist, 4},
     {"_BayesMallows_get_partition_function", (DL_FUNC) &_BayesMallows_get_partition_function, 5},
     {"_BayesMallows_asymptotic_partition_function", (DL_FUNC) &_BayesMallows_asymptotic_partition_function, 6},

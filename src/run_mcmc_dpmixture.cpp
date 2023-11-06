@@ -111,7 +111,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
   uvec current_clusters = unique(current_cluster_assignment);
   n_clusters(0) = current_clusters.n_elem;
   int current_n_clusters = n_clusters(0);
-  unsigned int max_cluster_index = current_clusters.max();
+  unsigned int max_cluster_index = max(current_clusters);
   unsigned int min_cluster_index = 0;
 
   // Declare the cube to hold the latent ranks
@@ -124,6 +124,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
   mat alpha(current_n_clusters, std::ceil(static_cast<double>(nmc * 1.0 / alpha_jump)));
   alpha.fill(datum::nan);
   alpha.col(0).fill(alpha_init);
+  vec alpha_old = alpha.col(0);
 
   // If the user wants to save augmented data, we need a cube
   cube augmented_data;
@@ -161,7 +162,6 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
 
   // Other variables used
   int alpha_index = 0, rho_index = 0, aug_index = 0, cluster_assignment_index = 0;
-  vec alpha_old = alpha.col(0);
 
   uvec element_indices = regspace<uvec>(0, rankings.n_rows - 1);
 
@@ -171,7 +171,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
   // and this has been done above
   for(int t = 1; t < nmc; ++t){
     // Check if the user has tried to interrupt.
-    if (t % 1000 == 0) {
+    if (t % 50 == 0) {
       Rcpp::checkUserInterrupt();
       if(verbose){
         Rcpp::Rcout << "First " << t << " iterations of Metropolis-Hastings algorithm completed." << std::endl;
@@ -210,6 +210,8 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
                                                                  current_cluster_assignment, current_clusters, current_n_clusters,
                                                                  max_cluster_index, n_items, log_fact_n_item, lambda, alpha_max, psi,
                                                                  leap_size, metric, cardinalities, logz_estimate);
+
+    min_cluster_index = min(current_clusters);
 
     if(t % clus_thin == 0){
       ++cluster_assignment_index;
@@ -262,6 +264,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
     Rcpp::Named("shape2") = shape_2,
     Rcpp::Named("cluster_assignment") = cluster_assignment + 1,
     Rcpp::Named("n_clusters") = n_clusters,
+    Rcpp::Named("max_cluster_index") = max_cluster_index + 1,
     Rcpp::Named("augmented_data") = augmented_data,
     Rcpp::Named("any_missing") = any_missing,
     Rcpp::Named("augpair") = augpair,

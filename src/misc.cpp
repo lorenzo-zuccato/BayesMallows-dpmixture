@@ -25,12 +25,13 @@ double rtruncbeta(int shape1, int shape2, double trunc = 1) {
 }
 
 // Truncated exponential distribution
+// [[Rcpp::export]]
 double rtruncexp(double lambda, double trunc){
   int i = 0;
   double x;
   while(i < 1000){
     x = randu<double>();
-    x = - std::log(x - 1) / lambda;
+    x = - std::log(1 - x) / lambda;
     if(x < trunc) break;
     ++i;
   }

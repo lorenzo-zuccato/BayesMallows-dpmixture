@@ -218,7 +218,6 @@ compute_mallows_dpmixture <- function(rankings = NULL,
                             obs_freq = NULL,
                             metric = "footrule",
                             error_model = NULL,
-                            #n_clusters = 1L,
                             clus_thin = 1L,
                             nmc = 2000L,
                             leap_size = max(1L, floor(n_items / 5)),
@@ -231,7 +230,6 @@ compute_mallows_dpmixture <- function(rankings = NULL,
                             lambda = 0.001,
                             alpha_max = 1e6,
                             psi = 10L,
-                            #include_wcd = (n_clusters > 1),
                             save_aug = FALSE,
                             aug_thinning = 1L,
                             logz_estimate = NULL,
@@ -368,7 +366,7 @@ compute_mallows_dpmixture <- function(rankings = NULL,
     obs_freq = obs_freq,
     nmc = nmc,
     constraints = constraints,
-    cardinalities = logz_list$cardinalities,    #CHE è?
+    cardinalities = logz_list$cardinalities,
     logz_estimate = logz_list$logz_estimate,
     rho_init = rho_init,
     metric = metric,
@@ -401,7 +399,6 @@ compute_mallows_dpmixture <- function(rankings = NULL,
   fit$aug_thinning <- aug_thinning
   fit$leap_size <- leap_size
   fit$alpha_prop_sd <- alpha_prop_sd
-  fit$include_wcd <- include_wcd
   fit$save_aug <- save_aug
 
   # Add names of item
@@ -410,8 +407,6 @@ compute_mallows_dpmixture <- function(rankings = NULL,
   } else {
     fit$items <- paste("Item", seq(from = 1, to = nrow(fit$rho), by = 1))
   }
-
-  #fit <- tidy_mcmc(fit)
 
   # Add class attribute
   class(fit) <- "BayesMallows"

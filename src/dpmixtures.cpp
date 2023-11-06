@@ -26,7 +26,7 @@ uvec initialize_cluster_assignment(const int n_assessors, const int psi){
     int n_clus = 1;
     for(int i = 1; i < n_assessors; ++i){
         n_clus = cluster_assignment.subvec(0, i - 1).max() + 1;
-        vec assignment_prob(n_clus+1);
+        vec assignment_prob(n_clus + 1);
         assignment_prob = initial_assignment_prob(cluster_assignment.subvec(0, i - 1), psi, n_clus);
         cluster_assignment(span(i)) = sample(regspace<uvec>(0, n_clus), 1, false, assignment_prob);
     }
@@ -40,13 +40,13 @@ int cluster_count_excluding_i(const uvec& current_cluster_assignment,
   int c = 0;
   for(int j = 0; j < n_assessors; ++j){
             if((current_cluster_assignment(j) == cluster_index) & (j != i)) c++;
-        }
+  }
   return c;
 }
 
 double  log_factorial(const int n){
     double f = 0;
-    for (int i=1; i<=n; ++i)
+    for (int i = 2; i <= n; ++i)
         f += std::log(i);
     return f;
 }
@@ -72,19 +72,21 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
                                     const std::string& metric,
                                     const Rcpp::Nullable<vec> cardinalities = R_NilValue,
                                     const Rcpp::Nullable<vec> logz_estimate = R_NilValue){
-  int n_assessors = rankings.n_rows;
+  int n_assessors = rankings.n_cols;
   bool disappearing_cluster = false;
   unsigned int cluster_index, disappearing_cluster_index;
   uvec new_cluster_assignment(n_assessors);
-  uvec n_in_cluster, possible_clusters;
-  vec assignment_probabilities, part_fun, alpha_old_temp, dist;
+  uvec possible_clusters;
+  vec assignment_probabilities, n_in_cluster, part_fun, alpha_old_temp, dist, prob_temp;
   mat rho_old_temp;
+
+  new_cluster_assignment = current_cluster_assignment;
 
   for(int i = 0; i < n_assessors; ++i){
     //Resizing objects based on current number of clusters
     assignment_probabilities.set_size(current_n_clusters + 1);
-    n_in_cluster.set_size(current_n_clusters + 1);
     possible_clusters.set_size(current_n_clusters + 1);
+    n_in_cluster.set_size(current_n_clusters);
     part_fun.set_size(current_n_clusters);
     alpha_old_temp.set_size(current_n_clusters);
     rho_old_temp.set_size(n_items, current_n_clusters);
@@ -93,24 +95,24 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
     for(int j = 0; j < current_n_clusters; ++j){
         cluster_index = current_clusters(j);
         part_fun(j) = get_partition_function(n_items, alpha_old(cluster_index), cardinalities, logz_estimate, metric);
-        n_in_cluster(j) = cluster_count_excluding_i(current_cluster_assignment, cluster_index, n_assessors, i);
-        // Checking if the cluster that i currently belongs to is going to disappear in this iteration
-        if((cluster_index == current_cluster_assignment(i)) & (n_in_cluster(j) == 0)){
+        n_in_cluster(j) = cluster_count_excluding_i(new_cluster_assignment, cluster_index, n_assessors, i);
+        alpha_old_temp(j) = alpha_old(cluster_index);
+        rho_old_temp.col(j) = rho_old.col(cluster_index);
+        // Checking if the cluster which i currently belongs to is going to disappear in this iteration
+        if((cluster_index == new_cluster_assignment(i)) && (n_in_cluster(j) == 0)){
             disappearing_cluster = true;
             disappearing_cluster_index = cluster_index;
         }
-        alpha_old_temp(j) = alpha_old(cluster_index);
-        rho_old_temp.col(j) = rho_old.col(cluster_index);
     }
     // Calculating distances of assessor i from current cluster consensus
     dist = rank_dist_vec(rho_old_temp, rankings.col(i), metric, ones(current_n_clusters));
     // Compute the logarithm of the unnormalized probability
-    assignment_probabilities.subvec(0, current_n_clusters - 1) = log(n_in_cluster) - std::log(psi + n_assessors -1)
-                                        - part_fun - alpha_old_temp / n_items * dist;
+    assignment_probabilities.subvec(0, current_n_clusters - 1) = log(n_in_cluster) - std::log(psi + n_assessors - 1)
+                                        - part_fun - alpha_old_temp / n_items % dist;
     assignment_probabilities(current_n_clusters) = std::log(psi) - log_fact_n_items - std::log(psi + n_assessors - 1);
     // Exponentiate to get unnormalized prob relative to max
-    vec prob = exp(assignment_probabilities - max(assignment_probabilities));
-    assignment_probabilities = normalise(prob, 1);
+    prob_temp = exp(assignment_probabilities - max(assignment_probabilities));
+    assignment_probabilities = normalise(prob_temp, 1);
 
     // Setting up possible cluster labels
     possible_clusters.subvec(0, current_n_clusters - 1) = current_clusters;
@@ -125,27 +127,28 @@ uvec update_cluster_labels_dpmixture(const mat& rankings,
 
     // Resize and sampling new parameters when a new cluster is created
     if(new_cluster_assignment(i) == max_cluster_index + 1){
-        max_cluster_index++;
+        ++max_cluster_index;
 
         rho.resize(n_items, max_cluster_index + 1, rho.n_slices);
-        rho(span::all, span(max_cluster_index ), span::all).fill(datum::nan);
+        rho(span::all, span(max_cluster_index), span::all).fill(datum::nan);
         rho_old.resize(n_items, max_cluster_index + 1);
         rho_acceptance.resize(nmc - 1, max_cluster_index + 1);
 
-        alpha.resize(max_cluster_index - 1, alpha.n_cols);
+        alpha.resize(max_cluster_index + 1, alpha.n_cols);
         alpha.row(max_cluster_index).fill(datum::nan);
         alpha_old.resize(max_cluster_index + 1);
         alpha_acceptance.resize(nmc - 1, max_cluster_index + 1);
 
         alpha_old(max_cluster_index) = rtruncexp(lambda, alpha_max);
         rho_old.col(max_cluster_index) = rmallows(rankings.col(i), alpha_old(max_cluster_index),
-                                                  1, 1000*std::log(n_items), 1, leap_size, metric);
+                                                  1, 100*std::log(n_items), 1, leap_size, metric);
     }
 
     // Deleting parameters of the disappearing cluster
     if(disappearing_cluster){
         rho_old.col(disappearing_cluster_index).fill(datum::nan);
         alpha_old(disappearing_cluster_index) = datum::nan;
+        disappearing_cluster = false;
     }
   }
   return new_cluster_assignment;
