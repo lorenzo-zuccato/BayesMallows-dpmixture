@@ -3,8 +3,8 @@
 
 #include "RcppArmadillo.h"
 
-arma::vec initial_assignment_prob(const arma::uvec already_assigned, const int psi, const int n_clus);
-arma::uvec initialize_cluster_assignment(const int n_assessors, const int psi);
+arma::vec initial_assignment_prob(const arma::uvec already_assigned, const double psi, const int n_clus);
+arma::uvec initialize_cluster_assignment(const int n_assessors, const double psi);
 
 int cluster_count_excluding_i(const arma::uvec& current_cluster_assignment,
                               const unsigned int& cluster_index,
@@ -28,7 +28,7 @@ arma::uvec update_cluster_labels_dpmixture(const arma::mat& rankings,
                                     const double& log_fact_n_items,
                                     const double& lambda,
                                     const double& alpha_max,
-                                    const int& psi,
+                                    const double& psi,
                                     const int& leap_size,
                                     const std::string& metric,
                                     const Rcpp::Nullable<arma::vec> cardinalities = R_NilValue,

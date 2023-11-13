@@ -64,8 +64,8 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
                             double alpha_init = 5,
                             int alpha_jump = 1,
                             double lambda = 0.1,
-                            double alpha_max = 1e6,
-                            int psi = 10,
+                            double alpha_max = 100,
+                            double psi = 1,
                             int rho_thinning = 1,
                             int aug_thinning = 1,
                             int clus_thin = 1,
@@ -205,11 +205,10 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
       alpha_old = alpha.col(alpha_index);
     }
 
-    current_cluster_assignment = update_cluster_labels_dpmixture(rankings, rho, rho_old, rho_acceptance,
-                                                                 alpha, alpha_old, alpha_acceptance, nmc,
-                                                                 current_cluster_assignment, current_clusters, current_n_clusters,
-                                                                 max_cluster_index, n_items, log_fact_n_item, lambda, alpha_max, psi,
-                                                                 leap_size, metric, cardinalities, logz_estimate);
+    current_cluster_assignment = update_cluster_labels_dpmixture(rankings, rho, rho_old, rho_acceptance, alpha,
+                                        alpha_old, alpha_acceptance, nmc, current_cluster_assignment, current_clusters,
+                                        current_n_clusters, max_cluster_index, n_items, log_fact_n_item, lambda,
+                                        alpha_max, psi, leap_size, metric, cardinalities, logz_estimate);
 
     min_cluster_index = min(current_clusters);
 
@@ -238,12 +237,12 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
     }
   }
 
-  vec alpha_acceptance_prob = ones(max_cluster_index);
-  vec rho_acceptance_prob = ones(max_cluster_index);
+  vec alpha_acceptance_prob = ones(max_cluster_index + 1);
+  vec rho_acceptance_prob = ones(max_cluster_index + 1);
   vec b;
   uvec temp_indices;
 
-  for(unsigned int i = 0; i < max_cluster_index; ++i){
+  for(unsigned int i = 0; i <= max_cluster_index; ++i){
     b = alpha_acceptance.col(i);
     temp_indices = find_finite(b);
     alpha_acceptance_prob(i) = sum(b(temp_indices)) / temp_indices.n_elem;

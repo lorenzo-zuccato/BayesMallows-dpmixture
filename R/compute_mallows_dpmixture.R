@@ -1,29 +1,5 @@
 #' Preference Learning with the Mallows Rank Model
 #'
-#' @description Compute the posterior distributions of the parameters of the
-#'   Bayesian Mallows Rank Model, given rankings or preferences stated by a set
-#'   of assessors.
-#'
-#'   The \code{BayesMallows} package uses the following parametrization of the
-#'   Mallows rank model \insertCite{mallows1957}{BayesMallows}:
-#'   \deqn{p(r|\alpha,\rho) = (1/Z_{n}(\alpha)) \exp{-\alpha/n d(r,\rho)}} where
-#'   \eqn{r} is a ranking, \eqn{\alpha} is a scale parameter, \eqn{\rho} is the
-#'   latent consensus ranking, \eqn{Z_{n}(\alpha)} is the partition function
-#'   (normalizing constant), and \eqn{d(r,\rho)} is a distance function
-#'   measuring the distance between \eqn{r} and \eqn{\rho}. Note that some
-#'   authors use a Mallows model without division by \eqn{n} in the exponent;
-#'   this includes the \code{PerMallows} package, whose scale parameter
-#'   \eqn{\theta} corresponds to \eqn{\alpha/n} in the \code{BayesMallows}
-#'   package. We refer to \insertCite{vitelli2018}{BayesMallows} for further
-#'   details of the Bayesian Mallows model.
-#'
-#'   \code{compute_mallows} always returns posterior distributions of the latent
-#'   consensus ranking \eqn{\rho} and the scale parameter \eqn{\alpha}. Several
-#'   distance measures are supported, and the preferences can take the form of
-#'   complete or incomplete rankings, as well as pairwise preferences.
-#'   \code{compute_mallows} can also compute mixtures of Mallows models, for
-#'   clustering of assessors with similar preferences.
-#'
 #' @param rankings A matrix of ranked items, of size \code{n_assessors x
 #'   n_items}. See \code{\link{create_ranking}} if you have an ordered set of
 #'   items that need to be converted to rankings. If \code{preferences} is
@@ -65,14 +41,6 @@
 #'   model is used. See \insertCite{crispino2019;textual}{BayesMallows} for a
 #'   definition of the Bernoulli model.
 #'
-#' @param n_clusters Integer specifying the number of clusters, i.e., the number
-#'   of mixture components to use. Defaults to \code{1L}, which means no
-#'   clustering is performed. See \code{\link{compute_mallows_mixtures}} for a
-#'   convenience function for computing several models with varying numbers of
-#'   mixtures.
-#'
-#'
-#'
 #' @param clus_thin Integer specifying the thinning to be applied to cluster
 #'   assignments and cluster probabilities. Defaults to \code{1L}.
 #'
@@ -86,7 +54,6 @@
 #'
 #' @param swap_leap Integer specifying the step size of the Swap proposal. Only
 #'   used when \code{error_model} is not \code{NULL}.
-#'
 #'
 #' @param rho_init Numeric vector specifying the initial value of the latent
 #'   consensus ranking \eqn{\rho}. Defaults to NULL, which means that the
@@ -131,12 +98,6 @@
 #'   \eqn{\tau_{1}, \tau_{2}, \dots, \tau_{C}}, where \eqn{C} is the value of
 #'   \code{n_clusters}. Defaults to \code{10L}. When \code{n_clusters = 1}, this
 #'   argument is not used.
-#'
-#' @param include_wcd Logical indicating whether to store the within-cluster
-#'   distances computed during the Metropolis-Hastings algorithm. Defaults to
-#'   \code{TRUE} if \code{n_clusters > 1} and otherwise \code{FALSE}. Setting
-#'   \code{include_wcd = TRUE} is useful when deciding the number of mixture
-#'   components to include, and is required by \code{\link{plot_elbow}}.
 #'
 #' @param save_aug Logical specifying whether or not to save the augmented
 #'   rankings every \code{aug_thinning}th iteration, for the case of missing
@@ -185,24 +146,17 @@
 #'   set may be time consuming. In this case it can be beneficial to precompute
 #'   it and provide it as a separate argument.
 #'
-#' @param save_ind_clus Whether or not to save the individual cluster
-#'   probabilities in each step. This results in csv files
-#'   \code{cluster_probs1.csv}, \code{cluster_probs2.csv}, ..., being saved in
-#'   the calling directory. This option may slow down the code considerably, but
-#'   is necessary for detecting label switching using Stephen's algorithm. See
-#'   \code{\link{label_switching}} for more information.
-#'
 #' @param seed Optional integer to be used as random number seed.
 #'
 #' @param cl Optional cluster.
 #'
 #'
-#' @return A list of class BayesMallows.
+#' @return A list of class BayesMallowsDPMixture.
 #'
 #' @seealso \code{\link{compute_mallows_mixtures}} for a function that computes
-#'   separate Mallows models for varying numbers of clusters.
+#'   separate Mallows models with finite mixtures for varying numbers of clusters.
 #'
-#'
+#' TO BE CHANGED
 #'
 #' @references \insertAllCited{}
 #'
@@ -227,9 +181,9 @@ compute_mallows_dpmixture <- function(rankings = NULL,
                             alpha_prop_sd = 0.1,
                             alpha_init = 1,
                             alpha_jump = 1L,
-                            lambda = 0.001,
-                            alpha_max = 1e6,
-                            psi = 10L,
+                            lambda = 0.1,
+                            alpha_max = 100,
+                            psi = 1L,
                             save_aug = FALSE,
                             aug_thinning = 1L,
                             logz_estimate = NULL,
@@ -238,7 +192,8 @@ compute_mallows_dpmixture <- function(rankings = NULL,
                             na_action = "augment",
                             constraints = NULL,
                             save_ind_clus = FALSE,
-                            seed = NULL) {
+                            seed = NULL
+                            ) {
   if (!is.null(seed)) set.seed(seed)
 
   # Check if there are NAs in rankings, if it is provided
@@ -349,67 +304,52 @@ compute_mallows_dpmixture <- function(rankings = NULL,
 
   logz_list <- prepare_partition_function(logz_estimate, metric, n_items)
 
-  #if (save_ind_clus) {
-  #  abort <- readline(
-  #    prompt = paste(
-  #      nmc, "csv files will be saved in your current working directory.",
-  #      "Proceed? (yes/no): "
-  #    )
-  #  )
-  #  if (tolower(abort) %in% c("n", "no")) stop()
-  #}
+  fits <- list(
+            run_mcmc_dpmixture(
+              rankings = t(rankings),
+              obs_freq = obs_freq,
+              nmc = nmc,
+              constraints = constraints,
+              cardinalities = logz_list$cardinalities,
+              logz_estimate = logz_list$logz_estimate,
+              rho_init = rho_init,
+              metric = metric,
+              error_model = ifelse(is.null(error_model), "none", error_model),
+              Lswap = swap_leap,
+              lambda = lambda,
+              alpha_max = alpha_max,
+              psi = psi,
+              leap_size = leap_size,
+              alpha_prop_sd = alpha_prop_sd,
+              alpha_init = alpha_init,
+              alpha_jump = alpha_jump,
+              rho_thinning = rho_thinning,
+              aug_thinning = aug_thinning,
+              clus_thin = clus_thin,
+              save_aug = save_aug,
+              verbose = verbose,
+              kappa_1 = 1.0,
+              kappa_2 = 1.0
+              )
+  )
 
-  # Transpose rankings to get samples along columns, since we typically want
-  # to extract one sample at a time. armadillo is column major, just like rankings
-  fit <- run_mcmc_dpmixture(
-    rankings = t(rankings),
-    obs_freq = obs_freq,
-    nmc = nmc,
-    constraints = constraints,
-    cardinalities = logz_list$cardinalities,
-    logz_estimate = logz_list$logz_estimate,
-    rho_init = rho_init,
-    metric = metric,
-    error_model = ifelse(is.null(error_model), "none", error_model),
-    Lswap = swap_leap,
-    leap_size = leap_size,
-    alpha_prop_sd = alpha_prop_sd,
-    alpha_init = alpha_init,
-    alpha_jump = alpha_jump,
-    lambda = lambda,
-    alpha_max = alpha_max,
-    psi = psi,
-    rho_thinning = rho_thinning,
-    aug_thinning = aug_thinning,
-    clus_thin = clus_thin,
-    save_aug = save_aug,
-    verbose = verbose)
 
   if (verbose) {
     print("Metropolis-Hastings algorithm completed. Post-processing data.")
   }
 
-  # Add some arguments
-  fit$metric <- metric
-  fit$lambda <- lambda
-  fit$nmc <- nmc
-  fit$n_items <- n_items
-  fit$alpha_jump <- alpha_jump
-  fit$rho_thinning <- rho_thinning
-  fit$aug_thinning <- aug_thinning
-  fit$leap_size <- leap_size
-  fit$alpha_prop_sd <- alpha_prop_sd
-  fit$save_aug <- save_aug
+  fit <- tidy_mcmc_dpmixture(
+    fits, rho_thinning, rankings, alpha_jump,
+    fits[[1]]$max_cluster_index, nmc, aug_thinning,
+    n_items, clus_thin)
 
-  # Add names of item
-  if (!is.null(colnames(rankings))) {
-    fit$items <- colnames(rankings)
-  } else {
-    fit$items <- paste("Item", seq(from = 1, to = nrow(fit$rho), by = 1))
-  }
+  fit$save_aug <- save_aug
+  fit$rho_thinning <- rho_thinning
+  fit$alpha_jump <- alpha_jump
+  fit$clus_thin <- clus_thin
 
   # Add class attribute
-  class(fit) <- "BayesMallows"
+  class(fit) <- "BayesMallowsDPMixture"
 
   return(fit)
 }

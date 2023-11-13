@@ -188,7 +188,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // run_mcmc_dpmixture
-Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc, Rcpp::List constraints, Rcpp::Nullable<arma::vec> cardinalities, Rcpp::Nullable<arma::vec> logz_estimate, Rcpp::Nullable<arma::mat> rho_init, std::string metric, std::string error_model, int Lswap, int leap_size, double alpha_prop_sd, double alpha_init, int alpha_jump, double lambda, double alpha_max, int psi, int rho_thinning, int aug_thinning, int clus_thin, bool save_aug, bool verbose, double kappa_1, double kappa_2);
+Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc, Rcpp::List constraints, Rcpp::Nullable<arma::vec> cardinalities, Rcpp::Nullable<arma::vec> logz_estimate, Rcpp::Nullable<arma::mat> rho_init, std::string metric, std::string error_model, int Lswap, int leap_size, double alpha_prop_sd, double alpha_init, int alpha_jump, double lambda, double alpha_max, double psi, int rho_thinning, int aug_thinning, int clus_thin, bool save_aug, bool verbose, double kappa_1, double kappa_2);
 RcppExport SEXP _BayesMallows_run_mcmc_dpmixture(SEXP rankingsSEXP, SEXP obs_freqSEXP, SEXP nmcSEXP, SEXP constraintsSEXP, SEXP cardinalitiesSEXP, SEXP logz_estimateSEXP, SEXP rho_initSEXP, SEXP metricSEXP, SEXP error_modelSEXP, SEXP LswapSEXP, SEXP leap_sizeSEXP, SEXP alpha_prop_sdSEXP, SEXP alpha_initSEXP, SEXP alpha_jumpSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP psiSEXP, SEXP rho_thinningSEXP, SEXP aug_thinningSEXP, SEXP clus_thinSEXP, SEXP save_augSEXP, SEXP verboseSEXP, SEXP kappa_1SEXP, SEXP kappa_2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -209,7 +209,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type alpha_jump(alpha_jumpSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< double >::type alpha_max(alpha_maxSEXP);
-    Rcpp::traits::input_parameter< int >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< int >::type rho_thinning(rho_thinningSEXP);
     Rcpp::traits::input_parameter< int >::type aug_thinning(aug_thinningSEXP);
     Rcpp::traits::input_parameter< int >::type clus_thin(clus_thinSEXP);

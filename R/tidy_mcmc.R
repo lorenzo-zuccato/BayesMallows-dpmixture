@@ -61,6 +61,61 @@ tidy_mcmc <- function(fits, rho_thinning, rankings, alpha_jump,
 }
 
 
+tidy_mcmc_dpmixture <- function(fits, rho_thinning, rankings, alpha_jump,
+                      n_clusters, nmc, aug_thinning, n_items, clus_thin) {
+  fit <- list()
+
+  # Add names of item
+  if (!is.null(colnames(rankings))) {
+    items <- colnames(rankings)
+  } else {
+    items <- paste("Item", seq(from = 1, to = n_items, by = 1))
+  }
+
+  fit$rho <- do.call(rbind, lapply(seq_along(fits), function(i) {
+    tidy_rho(fits[[i]]$rho, i, rho_thinning, items)
+  }))
+
+  fit$alpha <- do.call(rbind, lapply(seq_along(fits), function(i) {
+    tidy_alpha(fits[[i]]$alpha, i, alpha_jump)
+  }))
+
+  fit$cluster_assignment <- do.call(rbind, lapply(seq_along(fits), function(i) {
+    tidy_cluster_assignment(fits[[i]]$cluster_assignment, i, n_clusters, fits[[i]]$n_assessors, nmc, clus_thin)
+  }))
+
+  fit$augmented_data <- do.call(rbind, lapply(seq_along(fits), function(i) {
+    tidy_augmented_data(fits[[i]]$augmented_data, i, items, aug_thinning)
+  }))
+
+  fit$aug_acceptance <- lapply(seq_along(fits), function(i) {
+    tidy_augmentation_acceptance(
+      fits[[i]]$aug_acceptance, i, fits[[i]]$any_missing, fits[[i]]$augpair
+    )
+  })
+
+  fit$theta <- do.call(rbind, lapply(seq_along(fits), function(i) {
+    tidy_error_probability(fits[[i]]$theta, i)
+  }))
+
+  fit$n_clusters <- fits[[1]]$n_clusters
+  fit$items <- items
+  fit$n_items <- n_items
+  fit$n_assessors <- fits[[1]]$n_assessors
+  fit$nmc <- nmc
+  fit$alpha_acceptance <- rowMeans(matrix(
+    vapply(fits, function(x) x$alpha_acceptance, numeric(n_clusters)),
+    nrow = n_clusters
+  ))
+  fit$rho_acceptance <- rowMeans(matrix(
+    vapply(fits, function(x) x$rho_acceptance, numeric(n_clusters)),
+    nrow = n_clusters
+  ))
+
+  return(fit)
+}
+
+
 
 tidy_rho <- function(rho_mat, chain, rho_thinning, items) {
   # Tidy rho
@@ -127,7 +182,7 @@ tidy_alpha <- function(alpha_mat, chain, alpha_jump) {
 
 tidy_cluster_assignment <- function(
     cluster_assignment, chain, n_clusters,
-    n_assessors, nmc) {
+    n_assessors, nmc, clus_thin) {
   if (n_clusters > 1) {
     cluster_dims <- dim(cluster_assignment)
     value <- paste("Cluster", cluster_assignment)
@@ -145,7 +200,7 @@ tidy_cluster_assignment <- function(
     times = cluster_dims[[2]]
   )
   iteration <- rep(
-    seq(from = 1, to = cluster_dims[[2]], by = 1),
+    seq(from = 1, to = cluster_dims[[2]], by = clus_thin),
     each = cluster_dims[[1]]
   )
 

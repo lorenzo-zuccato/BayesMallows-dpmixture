@@ -221,7 +221,7 @@ run_mcmc <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_e
 #' @param kappa_1 Hyperparameter for \eqn{theta} in the Bernoulli error model. Defaults to 1.0.
 #' @param kappa_2 Hyperparameter for \eqn{theta} in the Bernoulli error model. Defaults to 1.0.
 #'
-run_mcmc_dpmixture <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric = "footrule", error_model = "none", Lswap = 1L, leap_size = 1L, alpha_prop_sd = 0.5, alpha_init = 5, alpha_jump = 1L, lambda = 0.1, alpha_max = 1e6, psi = 10L, rho_thinning = 1L, aug_thinning = 1L, clus_thin = 1L, save_aug = FALSE, verbose = FALSE, kappa_1 = 1.0, kappa_2 = 1.0) {
+run_mcmc_dpmixture <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric = "footrule", error_model = "none", Lswap = 1L, leap_size = 1L, alpha_prop_sd = 0.5, alpha_init = 5, alpha_jump = 1L, lambda = 0.1, alpha_max = 100, psi = 1, rho_thinning = 1L, aug_thinning = 1L, clus_thin = 1L, save_aug = FALSE, verbose = FALSE, kappa_1 = 1.0, kappa_2 = 1.0) {
     .Call(`_BayesMallows_run_mcmc_dpmixture`, rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric, error_model, Lswap, leap_size, alpha_prop_sd, alpha_init, alpha_jump, lambda, alpha_max, psi, rho_thinning, aug_thinning, clus_thin, save_aug, verbose, kappa_1, kappa_2)
 }
 
