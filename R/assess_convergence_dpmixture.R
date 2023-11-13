@@ -23,7 +23,7 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
   if(parameter == "n_clusters"){
     m <- model_fit$n_clusters
 
-    plot(y = m, x = seq(1, model_fit$nmc, by = model_fit$clus_thin),
+    plot(y = m, x = unique(model_fit$cluster_assignment$iteration),
          main = "Number of non empty clusters", type = "l", col = "red",
          xlab = "Iteration", ylab = "")
 
@@ -31,13 +31,13 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
     if (is.null(n)) stop("Please specify the number of clusters to visualize.")
     if (n < 1) stop("The number of clusters to visualize must be at least 1.")
 
-    persistence_clusters <- fit$cluster_assignment %>%
+    persistence_clusters <- model_fit$cluster_assignment %>%
       group_by(iteration, value) %>%
       filter(row_number() == 1)
     clusters <- names(sort(table(persistence_clusters$value), decreasing = TRUE)[1:n])
 
     if(parameter == "alpha"){
-      m <- fit$alpha[fit$alpha$cluster %in% clusters ,]
+      m <- model_fit$alpha[model_fit$alpha$cluster %in% clusters ,]
 
       p <- ggplot2::ggplot(m, ggplot2::aes(
              x = iteration, y = value,
@@ -49,13 +49,13 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
              ggplot2::theme() +
              ggplot2::facet_wrap(ggplot2::vars(length(clusters)),
                             labeller = ggplot2::as_labeller(cluster_labeler_function), scales = "free_y")
-    suppressWarnings(print(p))
+    return(p)
 
     }else if(parameter == "empirical_cluster_probs") {
-      m <- fit$cluster_assignment[fit$cluster_assignment$value %in% clusters ,]
+      m <- model_fit$cluster_assignment[model_fit$cluster_assignment$value %in% clusters ,]
 
       m <- aggregate(m, list(m$value, m$iteration), FUN = function(x){
-                                                    return(length(x) / fit$n_assessors)})
+                                                    return(length(x) / model_fit$n_assessors)})
       colnames(m) <- c("value", "iteration", "count")
 
       p <- ggplot2::ggplot(m, ggplot2::aes(
@@ -68,7 +68,7 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
         ggplot2::theme() +
         ggplot2::facet_wrap(ggplot2::vars(length(clusters)),
                             labeller = ggplot2::as_labeller(cluster_labeler_function), scales = "free_y")
-      suppressWarnings(print(p))
+      return(p)
 
     }
   }else stop("parameter must be either \"n_clusters\", \"alpha\" or \"empirical_cluster_probs\".")

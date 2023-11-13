@@ -200,7 +200,7 @@ tidy_cluster_assignment <- function(
     times = cluster_dims[[2]]
   )
   iteration <- rep(
-    seq(from = 1, to = cluster_dims[[2]], by = clus_thin),
+    seq(from = 1, to = cluster_dims[[2]] * clus_thin, by = clus_thin),
     each = cluster_dims[[1]]
   )
 
