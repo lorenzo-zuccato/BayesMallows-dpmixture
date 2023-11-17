@@ -86,6 +86,79 @@ compute_posterior_intervals.BayesMallows <- function(
   return(df)
 }
 
+
+
+#' Compute posterior intervals
+#'
+#' @param model_fit An object of class \code{BayesMallowsDPMixture} returned from
+#'   \code{\link{compute_mallows_dpmixture}}, on which the cluster partitioning was
+#'   already estimated.
+#' @param burnin A numeric value specifying the number of iterations to discard
+#'   as burn-in. Defaults to \code{model_fit$burnin}, and must be provided if
+#'   \code{model_fit$burnin} does not exist. See
+#'   \code{\link{assess_convergence}}.
+#' @param parameter Character string defining which parameter to compute
+#'   posterior intervals for. One of \code{"alpha"}, \code{"rho"}. Default is \code{"alpha"}.
+#' @param level Decimal number in \eqn{[0,1]} specifying the confidence level.
+#'   Defaults to \code{0.95}.
+#' @param decimals Integer specifying the number of decimals to include in
+#'   posterior intervals and the mean and median. Defaults to \code{3}.
+#' @param ... Other arguments. Currently not used.
+#'
+#' @seealso assess_convergence_dpmixture
+#' @export
+#' @family posterior quantities
+compute_posterior_intervals.BayesMallowsDPMixture <- function(
+    model_fit, burnin = model_fit$burnin,
+    parameter = "alpha",
+    level = 0.95, decimals = 3L, ...) {
+  stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
+
+  if (is.null(burnin)) {
+    stop("Please specify the burnin.")
+  }
+
+  if (is.null(model_fit$partition)) {
+    stop("model_fit$partition is missing. Please compute the partition wrt which conditioning with function partition_estimate.")
+  }
+
+  stopifnot(burnin < model_fit$nmc)
+
+  if (length(parameter) > 1) stop("Only one parameter allowed.")
+  parameter <- match.arg(
+    parameter,
+    c("alpha", "rho")
+  )
+
+  stopifnot(level > 0 && level < 1)
+
+
+  df <- model_fit$cluster_assignment
+  df$cluster_partition <- rep(x$partition$cl, nrow(x$cluster_assignment) / x$n_assessors)
+  df <- merge(x$alpha[(x$alpha$iteration > burnin) & is.finite(x$alpha$value), ],
+                      df[df$iteration > burnin , ],
+                      by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
+  df$assessor <- NULL
+  df$cluster <- NULL
+  df$chain <- NULL
+
+  if (parameter == "alpha") {
+    df <- .compute_posterior_intervals(split(df, f = df$cluster_partition), parameter, level, decimals)
+  #} else if (parameter == "rho") {
+  #  decimals <- 0
+  # df <- .compute_posterior_intervals(
+  #    split(df, f = interaction(df$cluster, df$item)),
+  #    parameter, level, decimals,
+  #    discrete = TRUE
+  #  )
+  }
+
+  if (max(model_fit$partition$cl) == 1) df$cluster <- NULL
+
+  row.names(df) <- NULL
+  return(df)
+}
+
 #' @title Compute posterior intervals
 #'
 #' @description This function computes posterior intervals based on the set of samples at the

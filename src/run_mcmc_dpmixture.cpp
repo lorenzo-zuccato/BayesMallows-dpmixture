@@ -65,7 +65,8 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
                             int alpha_jump = 1,
                             double lambda = 0.1,
                             double alpha_max = 100,
-                            double psi = 1,
+                            double psi = 0.1,
+                            double psi_init = 1.0,
                             int rho_thinning = 1,
                             int aug_thinning = 1,
                             int clus_thin = 1,
@@ -104,7 +105,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
   int n_cluster_assignments = std::ceil(static_cast<double>(nmc * 1.0 / clus_thin));
 
   umat cluster_assignment(n_assessors, n_cluster_assignments);
-  cluster_assignment.col(0) = initialize_cluster_assignment(n_assessors, psi);
+  cluster_assignment.col(0) = initialize_cluster_assignment(n_assessors, psi_init);
   uvec current_cluster_assignment = cluster_assignment.col(0);
 
   uvec n_clusters(n_cluster_assignments);
@@ -171,7 +172,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
   // and this has been done above
   for(int t = 1; t < nmc; ++t){
     // Check if the user has tried to interrupt.
-    if (t % 50 == 0) {
+    if (t % 500 == 0) {
       Rcpp::checkUserInterrupt();
       if(verbose){
         Rcpp::Rcout << "First " << t << " iterations of Metropolis-Hastings algorithm completed." << std::endl;

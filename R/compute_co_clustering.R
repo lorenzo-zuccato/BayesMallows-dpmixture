@@ -1,4 +1,4 @@
-co_clustering <- function(model_fit, burnin = model_fit$burnin){
+compute_co_clustering <- function(model_fit, burnin = model_fit$burnin){
   stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
 
   if (is.null(burnin)) {
@@ -18,5 +18,11 @@ co_clustering <- function(model_fit, burnin = model_fit$burnin){
     }
   }
 
-  return(co_clus / length(unique(m$iteration)))
+  h <- heatmap(co_clus)$rowInd
+  co_clus <- co_clus[h, h]
+
+  co_clustering <- list(co_clus_matrix = co_clus / length(unique(m$iteration)),
+                        order = h)
+
+  return(co_clustering)
 }

@@ -18,7 +18,7 @@ tidy_mcmc <- function(fits, rho_thinning, rankings, alpha_jump,
   }))
 
   fit$cluster_assignment <- do.call(rbind, lapply(seq_along(fits), function(i) {
-    tidy_cluster_assignment(fits[[i]]$cluster_assignment, i, n_clusters, fits[[i]]$n_assessors, nmc)
+    tidy_cluster_assignment(fits[[i]]$cluster_assignment, i, n_clusters, fits[[i]]$n_assessors, nmc, clus_thin = 1)
   }))
 
   fit$cluster_probs <- do.call(rbind, lapply(seq_along(fits), function(i) {
@@ -103,6 +103,7 @@ tidy_mcmc_dpmixture <- function(fits, rho_thinning, rankings, alpha_jump,
   fit$n_items <- n_items
   fit$n_assessors <- fits[[1]]$n_assessors
   fit$nmc <- nmc
+  fit$max_cluster_index <- fits[[1]]$max_cluster_index
   fit$alpha_acceptance <- rowMeans(matrix(
     vapply(fits, function(x) x$alpha_acceptance, numeric(n_clusters)),
     nrow = n_clusters
@@ -111,6 +112,9 @@ tidy_mcmc_dpmixture <- function(fits, rho_thinning, rankings, alpha_jump,
     vapply(fits, function(x) x$rho_acceptance, numeric(n_clusters)),
     nrow = n_clusters
   ))
+
+  fit$alpha <- na.omit(fit$alpha)
+  fit$rho <- na.omit(fit$rho)
 
   return(fit)
 }
