@@ -95,6 +95,7 @@ determine the directory and filenames of the csv files.
 }
 \seealso{
 Other diagnostics: 
+\code{\link{assess_convergence_dpmixture}()},
 \code{\link{assess_convergence}()}
 }
 \concept{diagnostics}

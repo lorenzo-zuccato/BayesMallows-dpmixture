@@ -91,6 +91,7 @@ Other posterior quantities:
 \code{\link{assign_cluster}()},
 \code{\link{compute_consensus.BayesMallows}()},
 \code{\link{compute_consensus.SMCMallows}()},
+\code{\link{compute_posterior_intervals.BayesMallowsDPMixture}()},
 \code{\link{compute_posterior_intervals.BayesMallows}()},
 \code{\link{compute_posterior_intervals.SMCMallows}()},
 \code{\link{compute_posterior_intervals}()},
@@ -100,6 +101,7 @@ Other posterior quantities:
 \code{\link{plot_elbow}()},
 \code{\link{plot_top_k}()},
 \code{\link{predict_top_k}()},
+\code{\link{print.BayesMallowsDPMixture}()},
 \code{\link{print.BayesMallowsMixtures}()},
 \code{\link{print.BayesMallows}()}
 }

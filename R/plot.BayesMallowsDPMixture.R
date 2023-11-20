@@ -7,7 +7,8 @@
 #' to discard as burn-in. Defaults to \code{x$burnin}, and must be
 #' provided if \code{x$burnin} does not exist. See \code{\link{assess_convergence_dpmixture}}.
 #'
-plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clusters") {
+#' @export
+plot.BayesMallowsDPMixture <- function(x, y = NULL, burnin = x$burnin, parameter = "n_clusters", ...) {
   if (is.null(burnin)) {
     stop("Please specify the burnin.")
   }
@@ -15,7 +16,6 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
 
   if(parameter == "n_clusters"){
     df <- data.frame(n_clus = x$n_clusters[-seq(1, ceiling(burnin / x$clus_thin))])
-    hist(n_clusters, breaks=seq(min(n_clusters)-0.5, max(n_clusters)+0.5, by=1))
 
     p <- ggplot2::ggplot(df, aes(n_clus)) +
               ggplot2::geom_bar(aes(y = (after_stat(count))/sum(after_stat(count))), color = "darkblue", fill = "darkblue")  +
