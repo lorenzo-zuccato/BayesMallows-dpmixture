@@ -4,14 +4,21 @@
 \alias{assess_convergence_dpmixture}
 \title{Trace Plots from Metropolis-Hastings Algorithm}
 \usage{
-assess_convergence_dpmixture(model_fit, parameter = "n_clusters", n = NULL)
+assess_convergence_dpmixture(
+  model_fit,
+  parameter = "n_clusters",
+  n = NULL,
+  items = NULL,
+  assessors = NULL
+)
 }
 \arguments{
 \item{model_fit}{A fitted model object of class \code{BayesMallowsDPMixture} returned from
 \code{\link{compute_mallows_dpmixture}}.}
 
 \item{parameter}{Character string specifying which parameter to plot. Available
-options are \code{"n_clusters"}, \code{"alpha"} or \code{"empirical_cluster_probs"}.}
+options are \code{"n_clusters"}, \code{"alpha"}, \code{"rho}, \code{"empirical_cluster_probs"},
+ \code{"Rtilde"} or \code{"theta"}.}
 
 \item{n}{Integer specifying the number of clusters to visualize. The first \code{n} clusters
 ordered by number of iterations of persistence in the chain are chosen.}

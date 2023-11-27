@@ -44,6 +44,7 @@ posterior probability.
 \code{\link{compute_mallows}} for an example where this function is used.
 
 Other posterior quantities: 
+\code{\link{compute_consensus.BayesMallowsDPMixture}()},
 \code{\link{compute_consensus.BayesMallows}()},
 \code{\link{compute_consensus.SMCMallows}()},
 \code{\link{compute_consensus}()},

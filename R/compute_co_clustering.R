@@ -18,11 +18,11 @@ compute_co_clustering <- function(model_fit, burnin = model_fit$burnin){
     }
   }
 
-  h <- heatmap(co_clus)$rowInd
-  co_clus <- co_clus[h, h]
+  #h <- heatmap(co_clus)$rowInd
+  #co_clus <- co_clus[h, h]
 
-  co_clustering <- list(co_clus_matrix = co_clus / length(unique(m$iteration)),
-                        order = h)
+  #co_clustering <- list(co_clus_matrix = co_clus / length(unique(m$iteration)),
+ #                       order = h)
 
-  return(co_clustering)
+  return(co_clus / length(unique(m$iteration)))
 }

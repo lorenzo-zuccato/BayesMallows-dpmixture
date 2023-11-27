@@ -89,6 +89,7 @@ compute_consensus(model_fit, type = "MAP")
 \seealso{
 Other posterior quantities: 
 \code{\link{assign_cluster}()},
+\code{\link{compute_consensus.BayesMallowsDPMixture}()},
 \code{\link{compute_consensus.BayesMallows}()},
 \code{\link{compute_consensus.SMCMallows}()},
 \code{\link{compute_posterior_intervals.BayesMallowsDPMixture}()},

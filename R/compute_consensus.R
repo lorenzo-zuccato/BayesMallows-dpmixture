@@ -112,6 +112,111 @@ compute_consensus.BayesMallows <- function(
   as.data.frame(df)
 }
 
+#' @title Compute Consensus Ranking
+#'
+#' @param model_fit Object of type \code{BayesMallowsDPMixture} returned from
+#'   \code{\link{compute_mallows_dpmixture}}.
+#' @param type Character string specifying which consensus to compute. Either
+#'   \code{"CP"} or \code{"MAP"}. Defaults to \code{"CP"}.
+#' @param burnin A numeric value specifying the number of iterations to discard
+#'   as burn-in. Defaults to \code{model_fit$burnin}, and must be provided if
+#'   \code{model_fit$burnin} does not exist. See
+#'   \code{\link{assess_convergence_dpmixture}}.
+#' @param parameter Character string defining the parameter for which to compute
+#'   the consensus. Defaults to \code{"rho"}. Available options are \code{"rho"}
+#'   and \code{"Rtilde"}, with the latter giving consensus rankings for
+#'   augmented ranks.
+#' @param assessors When \code{parameter = "rho"}, this integer vector is used
+#'   to define the assessors for which to compute the augmented ranking.
+#' @param ... Other arguments passed on to other methods. Currently not used.
+#'   Defaults to \code{1L}, which yields augmented rankings for assessor 1.
+#' @export
+#' @family posterior quantities
+compute_consensus.BayesMallowsDPMixture <- function(
+    model_fit, type = "CP", burnin = model_fit$burnin, parameter = "rho",
+    assessors = 1L, ...) {
+  if (is.null(burnin)) {
+    stop("Please specify the burnin.")
+  }
+  stopifnot(burnin < model_fit$nmc)
+
+  type <- match.arg(type, c("CP", "MAP"))
+
+  stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
+
+  if (parameter == "Rtilde" &&
+      !inherits(model_fit$augmented_data, "data.frame")) {
+    stop("For augmented ranks, please refit model with option 'save_aug = TRUE'.")
+  }
+
+  if (parameter == "rho") {
+    # Filter out the pre-burnin iterations
+    df1 <- model_fit$rho[model_fit$rho$iteration > burnin, , drop = FALSE]
+    df2 <- model_fit$cluster_assignment
+    df2$cluster_partition <- rep(paste0("Cluster ", x$partition$cl), nrow(x$cluster_assignment) / x$n_assessors)
+    df <- merge(df1, df2[df2$iteration > burnin , ],
+                by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
+
+    df$assessor <- NULL
+    df$cluster <- NULL
+
+    names(df)[names(df) == "cluster_partition"] <- "cluster"
+
+    # Find the problem dimensions
+    n_rows <- length(unique(paste(df$item, df$cluster)))
+
+    # Check that there are rows.
+    stopifnot(n_rows > 0)
+
+    # Check that the number of rows are consistent with the information in
+    # the model object
+    stopifnot(max(model_fit$partition$cl) * model_fit$n_items == n_rows)
+
+
+    if (type == "CP") {
+      df <- cpc_bm(df)
+    } else if (type == "MAP") {
+      df <- cpm_bm(df)
+    }
+  } else if (parameter == "Rtilde") {
+    # Filter out the pre-burnin iterations and get the right assessors
+    df <- model_fit$augmented_data[model_fit$augmented_data$iteration > burnin &
+                                     model_fit$augmented_data$assessor %in% assessors, , drop = FALSE]
+
+    # Find the problem dimensions
+    n_rows <- length(unique(paste(df$assessor, df$item)))
+
+    # Check that there are rows.
+    stopifnot(n_rows > 0)
+
+    # Check that the number of rows are consistent with the information in
+    # the model object
+    stopifnot(length(assessors) * model_fit$n_items == n_rows)
+
+    # Treat assessors as clusters
+    names(df)[names(df) == "assessor"] <- "cluster"
+    class(df) <- c("consensus_BayesMallows", "tbl_df", "tbl", "data.frame")
+
+    df <- if (type == "CP") {
+      df <- cpc_bm(df)
+    } else if (type == "MAP") {
+      df <- cpm_bm(df)
+    }
+
+    if ("cluster" %in% names(df)) {
+      names(df)[names(df) == "cluster"] <- "assessor"
+    }
+  }
+
+  # If there is only one cluster, we drop the cluster column
+  if (length(unique(df$cluster)) == 1) {
+    df$cluster <- NULL
+  }
+
+  row.names(df) <- NULL
+  as.data.frame(df)
+}
+
 #' Compute Consensus Ranking
 #'
 #' Compute the consensus ranking using either cumulative probability (CP) or

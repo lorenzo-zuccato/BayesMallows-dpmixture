@@ -134,23 +134,25 @@ compute_posterior_intervals.BayesMallowsDPMixture <- function(
 
 
   df <- model_fit$cluster_assignment
-  df$cluster_partition <- rep(x$partition$cl, nrow(x$cluster_assignment) / x$n_assessors)
-  df <- merge(x$alpha[(x$alpha$iteration > burnin) & is.finite(x$alpha$value), ],
+  df$cluster_partition <- rep(paste0("Cluster ", x$partition$cl), nrow(x$cluster_assignment) / x$n_assessors)
+  df <- merge(x[[parameter]][(x[[parameter]]$iteration > burnin), ],
                       df[df$iteration > burnin , ],
                       by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
   df$assessor <- NULL
   df$cluster <- NULL
   df$chain <- NULL
 
+  names(df)[names(df) == "cluster_partition"] <- "cluster"
+
   if (parameter == "alpha") {
-    df <- .compute_posterior_intervals(split(df, f = df$cluster_partition), parameter, level, decimals)
-  #} else if (parameter == "rho") {
-  #  decimals <- 0
-  # df <- .compute_posterior_intervals(
-  #    split(df, f = interaction(df$cluster, df$item)),
-  #    parameter, level, decimals,
-  #    discrete = TRUE
-  #  )
+    df <- .compute_posterior_intervals(split(df, f = df$cluster), parameter, level, decimals)
+  } else if (parameter == "rho") {
+    decimals <- 0
+   df <- .compute_posterior_intervals(
+      split(df, f = interaction(df$cluster, df$item)),
+      parameter, level, decimals,
+      discrete = TRUE
+    )
   }
 
   if (max(model_fit$partition$cl) == 1) df$cluster <- NULL

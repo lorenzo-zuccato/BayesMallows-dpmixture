@@ -7,8 +7,15 @@
 #' to discard as burn-in. Defaults to \code{x$burnin}, and must be
 #' provided if \code{x$burnin} does not exist. See \code{\link{assess_convergence_dpmixture}}.
 #'
+#' @param items The items to study in the diagnostic plot for \code{rho}. Either
+#'   a vector of item names, corresponding to \code{x$items} or a
+#'   vector of indices. If NULL, five items are selected randomly.
+#'   Only used when \code{parameter = "rho"}.
+#'
+#' @param ... Other arguments passed to \code{plot} (not used).
+#'
 #' @export
-plot.BayesMallowsDPMixture <- function(x, y = NULL, burnin = x$burnin, parameter = "n_clusters", ...) {
+plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clusters", items = NULL, ...) {
   if (is.null(burnin)) {
     stop("Please specify the burnin.")
   }
@@ -24,7 +31,7 @@ plot.BayesMallowsDPMixture <- function(x, y = NULL, burnin = x$burnin, parameter
               ggplot2::scale_y_continuous(name = "Posterior probability",  breaks = c(0, 0.25, 0.5, 0.75, 1))
 
     return(p)
-  }else if(parameter == "co_clustering"){
+  } else if(parameter == "co_clustering"){
     co_clustering <- x$co_clustering
 
     if (is.null(co_clustering)) {
@@ -33,7 +40,10 @@ plot.BayesMallowsDPMixture <- function(x, y = NULL, burnin = x$burnin, parameter
 
     assessor1 <- rep(seq(1, x$n_assessors), x$n_assessors)
     assessor2 <- rep(seq(1, x$n_assessors), each = x$n_assessors)
-    probability <- c(co_clustering$co_clus_matrix)
+
+    order <- hclust(dist(co_clustering))$order
+
+    probability <- c(co_clustering[order, order])
 
     df <- data.frame(
       Assessor_1 = assessor1,
@@ -46,18 +56,18 @@ plot.BayesMallowsDPMixture <- function(x, y = NULL, burnin = x$burnin, parameter
       ggplot2::xlab("Assessors") +
       ggplot2::ylab("Assessors") +
       ggplot2::ggtitle("Co-clustering matrix") +
-      ggplot2::scale_x_discrete(breaks = co_clustering$order) +
-      ggplot2::scale_y_discrete(breaks = co_clustering$order)
+      ggplot2::scale_x_discrete(breaks = order) +
+      ggplot2::scale_y_discrete(breaks = order)
 
     return(p)
-  }else if(parameter == "alpha"){
+  } else if(parameter == "alpha"){
     if (is.null(x$partition)) {
       stop("model_fit$partition is missing. Please compute the partition wrt which conditioning with function partition_estimate.")
     }
 
     df <- x$cluster_assignment
-    df$partition <- rep(x$partition$cl, nrow(x$cluster_assignment) / x$n_assessors)
-    df <- merge(x$alpha[(x$alpha$iteration > burnin) & is.finite(x$alpha$value), ],
+    df$partition <- rep(paste0("Cluster ", x$partition$cl), nrow(x$cluster_assignment) / x$n_assessors)
+    df <- merge(x$alpha[(x$alpha$iteration > burnin), ],
                 df[df$iteration > burnin , ],
                 by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
 
@@ -71,5 +81,61 @@ plot.BayesMallowsDPMixture <- function(x, y = NULL, burnin = x$burnin, parameter
     }
 
     return(p)
-  } else stop("parameter must be either \"n_clusters\", \"co_clustering\", or \"alpha\".")
+  } else if (parameter == "rho"){
+    if (is.null(x$partition)) {
+      stop("model_fit$partition is missing. Please compute the partition wrt which conditioning with function partition_estimate.")
+    }
+
+    if (is.null(items) && x$n_items > 5) {
+      message("Items not provided by user. Picking 5 at random.")
+      items <- sample.int(x$n_items, 5)
+    } else if (is.null(items) && x$n_items > 0) {
+      items <- seq.int(from = 1, to = x$n_items)
+    }
+
+    if (!is.character(items)) {
+      items <- x$items[items]
+    }
+
+    df <- x$cluster_assignment
+    df$partition <- rep(paste0("Cluster ", x$partition$cl), nrow(x$cluster_assignment) / x$n_assessors)
+    df <- merge(x$rho[x$rho$iteration > burnin & x$rho$item %in% items, , drop = FALSE],
+                df[df$iteration > burnin , ],
+                by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
+
+    df <- aggregate(
+      list(n = df$iteration),
+      list(cluster = df$partition, item = df$item, value = df$value),
+      FUN = length
+    )
+
+    df$pct <- ave(df$n, df$cluster, df$item, FUN = function(x){x / sum(x)})
+
+    p <- ggplot2::ggplot(df, ggplot2::aes(x = .data$value, y = .data$pct)) +
+      ggplot2::geom_col() +
+      ggplot2::scale_x_continuous(labels = scalefun) +
+      ggplot2::xlab("rank") +
+      ggplot2::ylab("Posterior probability")
+
+    if (max(x$partition$cl) == 1) {
+      p <- p + ggplot2::facet_wrap(~ .data$item)
+    } else {
+      p <- p + ggplot2::facet_wrap(~ .data$cluster + .data$item)
+    }
+
+    return(p)
+  } else if(parameter == "theta"){
+    if (is.null(x$theta)) {
+      stop("Please run compute_mallows with error_model = 'bernoulli'.")
+    }
+
+    df <- x$theta[x$theta$iteration > burnin, , drop = FALSE]
+
+    p <- ggplot2::ggplot(df, ggplot2::aes(x = .data$value)) +
+      ggplot2::geom_density() +
+      ggplot2::xlab(expression(theta)) +
+      ggplot2::ylab("Posterior density")
+
+    return(p)
+  } else stop("parameter must be either \"n_clusters\", \"co_clustering\", \"alpha\", \"rho\" or \"theta\".")
 }

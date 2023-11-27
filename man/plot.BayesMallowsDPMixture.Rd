@@ -4,7 +4,7 @@
 \alias{plot.BayesMallowsDPMixture}
 \title{Plot Alpha Posterior Distribution}
 \usage{
-\method{plot}{BayesMallowsDPMixture}(x, y = NULL, burnin = x$burnin, parameter = "n_clusters", ...)
+\method{plot}{BayesMallowsDPMixture}(x, burnin = x$burnin, parameter = "n_clusters", items = NULL, ...)
 }
 \arguments{
 \item{x}{An object of type \code{BayesMallowsDPMixture}, returned from
@@ -13,6 +13,13 @@
 \item{burnin}{A numeric value specifying the number of iterations
 to discard as burn-in. Defaults to \code{x$burnin}, and must be
 provided if \code{x$burnin} does not exist. See \code{\link{assess_convergence_dpmixture}}.}
+
+\item{items}{The items to study in the diagnostic plot for \code{rho}. Either
+a vector of item names, corresponding to \code{x$items} or a
+vector of indices. If NULL, five items are selected randomly.
+Only used when \code{parameter = "rho"}.}
+
+\item{...}{Other arguments passed to \code{plot} (not used).}
 }
 \description{
 Plot Alpha Posterior Distribution
