@@ -153,7 +153,7 @@ compute_consensus.BayesMallowsDPMixture <- function(
     # Filter out the pre-burnin iterations
     df1 <- model_fit$rho[model_fit$rho$iteration > burnin, , drop = FALSE]
     df2 <- model_fit$cluster_assignment
-    df2$cluster_partition <- rep(paste0("Cluster ", x$partition$cl), nrow(x$cluster_assignment) / x$n_assessors)
+    df2$cluster_partition <- rep(paste0("Cluster ", model_fit$partition$cl), nrow(model_fit$cluster_assignment) / model_fit$n_assessors)
     df <- merge(df1, df2[df2$iteration > burnin , ],
                 by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
 

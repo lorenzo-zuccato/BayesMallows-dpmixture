@@ -45,8 +45,8 @@ compute_importance_sampling_estimate <- function(alpha_vector, n_items, metric =
     .Call(`_BayesMallows_compute_importance_sampling_estimate`, alpha_vector, n_items, metric, nmc)
 }
 
-initialization <- function() {
-    .Call(`_BayesMallows_initialization`)
+leap_and_shiftR <- function(rho, leap_size) {
+    .Call(`_BayesMallows_leap_and_shiftR`, rho, leap_size)
 }
 
 rtruncexp <- function(lambda, trunc) {

@@ -66,13 +66,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// initialization
-arma::uvec initialization();
-RcppExport SEXP _BayesMallows_initialization() {
+// leap_and_shiftR
+arma::vec leap_and_shiftR(const arma::vec& rho, int leap_size);
+RcppExport SEXP _BayesMallows_leap_and_shiftR(SEXP rhoSEXP, SEXP leap_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(initialization());
+    Rcpp::traits::input_parameter< const arma::vec& >::type rho(rhoSEXP);
+    Rcpp::traits::input_parameter< int >::type leap_size(leap_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(leap_and_shiftR(rho, leap_size));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -446,7 +448,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_BayesMallows_rank_dist_sum", (DL_FUNC) &_BayesMallows_rank_dist_sum, 4},
     {"_BayesMallows_rank_dist_vec", (DL_FUNC) &_BayesMallows_rank_dist_vec, 4},
     {"_BayesMallows_compute_importance_sampling_estimate", (DL_FUNC) &_BayesMallows_compute_importance_sampling_estimate, 4},
-    {"_BayesMallows_initialization", (DL_FUNC) &_BayesMallows_initialization, 0},
+    {"_BayesMallows_leap_and_shiftR", (DL_FUNC) &_BayesMallows_leap_and_shiftR, 2},
     {"_BayesMallows_rtruncexp", (DL_FUNC) &_BayesMallows_rtruncexp, 2},
     {"_BayesMallows_log_expected_dist", (DL_FUNC) &_BayesMallows_log_expected_dist, 4},
     {"_BayesMallows_get_partition_function", (DL_FUNC) &_BayesMallows_get_partition_function, 5},
