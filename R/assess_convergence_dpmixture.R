@@ -4,7 +4,7 @@
 #'  \code{\link{compute_mallows_dpmixture}}.
 #'
 #' @param parameter Character string specifying which parameter to plot. Available
-#' options are \code{"n_clusters"}, \code{"alpha"}, \code{"rho}, \code{"empirical_cluster_probs"},
+#' options are \code{"n_clusters"}, \code{"alpha"}, \code{"rho"}, \code{"empirical_cluster_probs"},
 #'  \code{"Rtilde"} or \code{"theta"}.
 #'
 #' @param n Integer specifying the number of clusters to visualize. The first \code{n} clusters

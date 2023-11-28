@@ -14,6 +14,10 @@
 to discard as burn-in. Defaults to \code{x$burnin}, and must be
 provided if \code{x$burnin} does not exist. See \code{\link{assess_convergence_dpmixture}}.}
 
+\item{parameter}{Character string defining the parameter to plot. Available
+options are \code{"n_clusters"}, \code{"co_cluseting"}, \code{"alpha"}, \code{"rho"},
+and \code{"theta"}.}
+
 \item{items}{The items to study in the diagnostic plot for \code{rho}. Either
 a vector of item names, corresponding to \code{x$items} or a
 vector of indices. If NULL, five items are selected randomly.
