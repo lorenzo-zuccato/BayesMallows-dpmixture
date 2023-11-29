@@ -1,3 +1,4 @@
+#' @export
 partition_estimate <- function(model_fit){
   stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
 

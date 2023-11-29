@@ -1,3 +1,4 @@
+#' @export
 compute_mallows_dpmixture <- function(rankings = NULL,
                             preferences = NULL,
                             obs_freq = NULL,

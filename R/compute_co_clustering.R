@@ -1,3 +1,4 @@
+#' @export
 compute_co_clustering <- function(model_fit, burnin = model_fit$burnin){
   stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
 
