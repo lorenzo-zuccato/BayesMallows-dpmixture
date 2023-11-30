@@ -172,7 +172,7 @@ Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc,
   // and this has been done above
   for(int t = 1; t < nmc; ++t){
     // Check if the user has tried to interrupt.
-    if (t % 500 == 0) {
+    if (t % 1000 == 0) {
       Rcpp::checkUserInterrupt();
       if(verbose){
         Rcpp::Rcout << "First " << t << " iterations of Metropolis-Hastings algorithm completed." << std::endl;
