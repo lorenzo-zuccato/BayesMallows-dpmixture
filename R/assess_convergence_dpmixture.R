@@ -22,11 +22,15 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
   }
 
   if(parameter == "n_clusters"){
-    m <- model_fit$n_clusters
+    m <- data.frame(n=model_fit$n_clusters)
 
-    plot(y = m, x = unique(model_fit$cluster_assignment$iteration),
-         main = "Number of non empty clusters", type = "l", col = "red",
-         xlab = "Iteration", ylab = "")
+    p <- ggplot(m, aes(x=unique(model_fit$cluster_assignment$iteration), y=n)) +
+        geom_line(color="red")+
+        ggplot2::xlab("Iteration") +
+        ggplot2::ylab(expression(n)) +
+        ggtitle("Number of non-empty clusters")
+
+    return(p)
 
   } else if (parameter == "Rtilde") {
 
@@ -46,6 +50,7 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
 
     if(parameter == "alpha"){
       m <- model_fit$alpha[model_fit$alpha$cluster %in% clusters ,]
+      m <- m[, -1]
 
       p <- ggplot2::ggplot(m, ggplot2::aes(
              x = iteration, y = value,
@@ -62,18 +67,19 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
 
     }else if(parameter == "empirical_cluster_probs") {
       m <- model_fit$cluster_assignment[model_fit$cluster_assignment$value %in% clusters ,]
+      m2 <- model_fit$alpha[model_fit$alpha$cluster %in% clusters ,]
 
-      m <- aggregate(m, list(m$value, m$iteration), FUN = function(x){
+      m <- aggregate(m$chain, list(cluster = m$value, iteration =m$iteration), FUN = function(x){
                                                     return(length(x) / model_fit$n_assessors)})
-      colnames(m) <- c("value", "iteration", "count")
+      colnames(m) <- c("cluster", "iteration", "count")
 
       p <- ggplot2::ggplot(m, ggplot2::aes(
         x = iteration, y = count,
-        group = value, color = value)) +
+        group = cluster, color = cluster)) +
         ggplot2::xlab("Iteration") +
         ggplot2::ylab(expression(hat(tau))) +
-        ggplot2::labs(color = "Value") +
-        ggplot2::geom_line(ggplot2::aes(color = value)) +
+        ggplot2::labs(color = "Cluster") +
+        ggplot2::geom_line(ggplot2::aes(color = m2$cluster)) +
         ggplot2::theme() +
         ggplot2::facet_wrap(ggplot2::vars(length(clusters)),
                             labeller = ggplot2::as_labeller(cluster_labeler_function),
