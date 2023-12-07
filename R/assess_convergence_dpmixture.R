@@ -50,7 +50,6 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
 
     if(parameter == "alpha"){
       m <- model_fit$alpha[model_fit$alpha$cluster %in% clusters ,]
-      m <- m[, -1]
 
       p <- ggplot2::ggplot(m, ggplot2::aes(
              x = iteration, y = value,
@@ -67,11 +66,14 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
 
     }else if(parameter == "empirical_cluster_probs") {
       m <- model_fit$cluster_assignment[model_fit$cluster_assignment$value %in% clusters ,]
-      m2 <- model_fit$alpha[model_fit$alpha$cluster %in% clusters ,]
 
       m <- aggregate(m$chain, list(cluster = m$value, iteration =m$iteration), FUN = function(x){
                                                     return(length(x) / model_fit$n_assessors)})
       colnames(m) <- c("cluster", "iteration", "count")
+      m2 <- model_fit$alpha[model_fit$alpha$cluster %in% clusters ,]
+
+      m <- merge(m2, m, by=c("iteration", "cluster"), all = TRUE)
+      m <- m[!is.na(m$count) , ]
 
       p <- ggplot2::ggplot(m, ggplot2::aes(
         x = iteration, y = count,
@@ -79,7 +81,7 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
         ggplot2::xlab("Iteration") +
         ggplot2::ylab(expression(hat(tau))) +
         ggplot2::labs(color = "Cluster") +
-        ggplot2::geom_line(ggplot2::aes(color = m2$cluster)) +
+        ggplot2::geom_line(ggplot2::aes(color = cluster)) +
         ggplot2::theme() +
         ggplot2::facet_wrap(ggplot2::vars(length(clusters)),
                             labeller = ggplot2::as_labeller(cluster_labeler_function),
