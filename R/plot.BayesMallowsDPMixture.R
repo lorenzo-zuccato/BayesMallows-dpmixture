@@ -8,7 +8,7 @@
 #' provided if \code{x$burnin} does not exist. See \code{\link{assess_convergence_dpmixture}}.
 #'
 #' @param parameter Character string defining the parameter to plot. Available
-#' options are \code{"n_clusters"}, \code{"co_cluseting"}, \code{"alpha"}, \code{"rho"},
+#' options are \code{"n_clusters"}, \code{"co_clustering"}, \code{"alpha"}, \code{"rho"},
 #' and \code{"theta"}.
 #'
 #' @param items The items to study in the diagnostic plot for \code{rho}. Either
