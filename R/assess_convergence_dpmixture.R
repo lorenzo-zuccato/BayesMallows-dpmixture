@@ -27,8 +27,7 @@ assess_convergence_dpmixture <- function(model_fit, parameter = "n_clusters", n 
     p <- ggplot(m, aes(x=unique(model_fit$cluster_assignment$iteration), y=n)) +
         geom_line(color="red")+
         ggplot2::xlab("Iteration") +
-        ggplot2::ylab(expression(n)) +
-        ggtitle("Number of non-empty clusters")
+        ggplot2::ylab("Number of non-empty clusters")
 
     return(p)
 
