@@ -30,8 +30,7 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
 
     p <- ggplot2::ggplot(df, aes(n_clus)) +
               ggplot2::geom_bar(aes(y = (after_stat(count))/sum(after_stat(count))), color = "darkblue", fill = "darkblue")  +
-              ggplot2::xlab("n_clusters") +
-              ggplot2::ggtitle("Posterior distribution of number of occupied clusters") +
+              ggplot2::xlab("Number of non-empty clusters") +
               ggplot2::scale_y_continuous(name = "Posterior probability",  breaks = c(0, 0.25, 0.5, 0.75, 1))
 
     return(p)
@@ -59,7 +58,6 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
       ggplot2::geom_raster(aes(fill = Probability)) +
       ggplot2::xlab("Assessors") +
       ggplot2::ylab("Assessors") +
-      ggplot2::ggtitle("Co-clustering matrix") +
       ggplot2::scale_x_discrete(breaks = order) +
       ggplot2::scale_y_discrete(breaks = order)
 
