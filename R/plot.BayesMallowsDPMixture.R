@@ -115,7 +115,6 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
 
     p <- ggplot2::ggplot(df, ggplot2::aes(x = .data$value, y = .data$pct)) +
       ggplot2::geom_col() +
-      ggplot2::scale_x_continuous(labels = scalefun) +
       ggplot2::xlab("rank") +
       ggplot2::ylab("Posterior probability")
 
