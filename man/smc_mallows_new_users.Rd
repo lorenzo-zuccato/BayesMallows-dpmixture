@@ -110,8 +110,8 @@ str(samples)
 }
 \seealso{
 Other modeling: 
-\code{\link{compute_mallows_mixtures}()},
 \code{\link{compute_mallows}()},
+\code{\link{compute_mallows_mixtures}()},
 \code{\link{smc_mallows_new_item_rank}()}
 }
 \concept{modeling}

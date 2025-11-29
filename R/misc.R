@@ -2,12 +2,12 @@
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats aggregate
 #' @importFrom utils head
-#' @useDynLib BayesMallows, .registration = TRUE
+#' @useDynLib BayesMallowsDPMixture, .registration = TRUE
 NULL
 
 
 .onUnload <- function(libpath) {
-  library.dynam.unload("BayesMallows", libpath)
+  library.dynam.unload("BayesMallowsDPMixture", libpath)
 }
 
 #' Check if a vector is a permutation

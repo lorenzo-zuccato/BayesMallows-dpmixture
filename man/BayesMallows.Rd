@@ -2,6 +2,8 @@
 % Please edit documentation in R/BayesMallows.R
 \docType{package}
 \name{BayesMallows}
+\alias{BayesMallowsDPMixture}
+\alias{BayesMallowsDPMixture-package}
 \alias{BayesMallows}
 \alias{BayesMallows-package}
 \title{BayesMallows: Bayesian Preference Learning with the Mallows Rank Model.}
@@ -34,4 +36,33 @@ The BayesMallows package provides functionality for fully
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/lorenzo-zuccato/BayesMallows-dpmixture (https://github.com/ocbe-uio/BayesMallows}
+  \item \url{https://ocbe-uio.github.io/BayesMallows/)}
+  \item Report bugs at \url{https://github.com/ocbe-uio/BayesMallows/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Lorenzo Zuccato \email{lorenzzu@uio.no}
+
+Authors:
+\itemize{
+  \item Oystein Sorensen \email{oystein.sorensen.1985@gmail.com} (\href{https://orcid.org/0000-0003-0724-3542}{ORCID})
+  \item Valeria Vitelli \email{valeria.vitelli@medisin.uio.no} (\href{https://orcid.org/0000-0002-6746-0453}{ORCID})
+  \item Marta Crispino \email{crispino.marta8@gmail.com}
+  \item Qinghua Liu \email{qinghual@math.uio.no}
+  \item Cristina Mollica \email{cristina.mollica@uniroma1.it}
+  \item Luca Tardella
+  \item Anja Stein
+}
+
+Other contributors:
+\itemize{
+  \item Waldir Leoncio \email{w.l.netto@medisin.uio.no} [contractor]
+}
+
 }

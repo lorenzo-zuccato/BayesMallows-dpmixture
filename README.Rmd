@@ -17,6 +17,114 @@ knitr::opts_chunk$set(
   eval = TRUE
 )
 ```
+
+```{r, include=FALSE}
+library(ggplot2)
+```
+
+<!-- Fork Notice -->
+**⚠️ Research Fork of BayesMallows**
+
+This repository extends the official **BayesMallows** package by implementing a **Dirichlet-process mixture model** for the Mallows model.  
+The purpose of this fork is to allow **automatic discovery of the number of clusters** in a population of assessors, using a Bayesian nonparametric approach. 
+
+This version contains methods that are **currently undergoing peer review**. For the stable version of the package, please refer to the original repository.
+
+# New Methodology: Dirichlet-Process Mixture Model
+
+This fork introduces a **Dirichlet-process mixture model** for the Mallows model, allowing for:
+
+- Automatic detection of the number of clusters among assessors
+- Bayesian nonparametric inference
+- Integration within the existing BayesMallows framework
+
+## Installation
+
+To install this version of the package use the `remotes` package:
+
+```{r,eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("lorenzo-zuccato/BayesMallows-dpmixture")
+```
+
+Load the package with
+
+```{r}
+library(BayesMallowsDPMixture)
+```
+
+## Basic Usage Example
+
+Create synthetic data to test the DPMixture:
+
+```{r}
+d1 <- sample_mallows(1:10, 5, 20)
+d2 <- sample_mallows(10:1, 2, 20)
+data <- rbind(d1,d2)
+```
+
+Run the MCMC with `compute_mallows_dpmixture`:
+
+```{r}
+fit <- compute_mallows_dpmixture(data)
+```
+
+Trace plots to assess the convergence of the chain can be generated using the function `assess_convergence_dpmixture`, which, by default, displays the trend of the number of non-empty clusters.
+
+```{r}
+assess_convergence_dpmixture(fit)
+```
+
+The same function permits to plot either $\alpha$ or the estimated cluster proportions $\hat{\tau}$. In these cases, the user must specify the number of clusters to visualize in the `n` argument. The software will automatically show the clusters corresponding to the $n$ most persistent labels in the chain, where the persistence is defined as the number of samples in which the label is present among the cluster assignments.
+
+```{r}
+assess_convergence_dpmixture(fit, parameter = "alpha", n = 5)
+```
+```{r}
+assess_convergence_dpmixture(fit, parameter = "empirical_cluster_probs", n = 5)
+```
+
+Fix the burn-in using the command:
+
+```{r}
+fit$burnin <- 200
+```
+
+Compute the co-clustering matrix with the function `compute_co_clustering`. This will discard the burn-in and compute the posterior probability for every two items to belong to the same cluster. 
+
+```{r}
+fit$co_clustering <- compute_co_clustering(fit)
+```
+
+Estimate a partition of the assessors after computing the co-clustering matrix with the function `partition_estimate`. Notice that this method calls the function `minVI` from the package `mcclust.ext` (see @wade2015).
+
+```{r, eval = FALSE}
+remotes::install_github("sarawade/mcclust.ext")
+```
+
+```{r}
+library(mcclust.ext)
+fit$partition <- partition_estimate(fit)
+```
+
+You can visualize the estimated number of non-empty clusters and their cardinality through the commands:
+
+```{r}
+max(fit$partition$cl)
+table(fit$partition$cl)
+```
+
+After a partition has been estimated, you can visualize the corresponding posterior distributions with the function `plot`, compute credible intervals with `compute_posterior_intervals` and estimate a consensus ranking with `compute_consensus`, in the same way as the original package `BayesMallows`.
+
+```{r}
+plot(fit, parameter = "alpha")
+```
+
+```{r}
+compute_posterior_intervals(fit, parameter = "alpha")
+```
+
+
 # BayesMallows
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/BayesMallows)](https://cran.r-project.org/package=BayesMallows)
@@ -45,25 +153,25 @@ remotes::install_github("ocbe-uio/BayesMallows")
 
 To get started, load the package with
 
-```{r}
+```{r, eval=FALSE}
 library(BayesMallows)
 ```
 
 The package comes with several example datasets. The simplest one contains 12 persons' assessments of the weights of 20 potatoes, either by visual inspection (`potato_visual`) or by lifting the potatoes and comparing their relative weights by hand (`potato_weighing`). To fit a Bayesian Mallows model on the `potato_visual` dataset, we do
 
-```{r}
+```{r, eval=FALSE}
 fit <- compute_mallows(potato_visual)
 ```
 
 Next, we can see a diagnostic plot for the Metropolis-Hastings algorithm with `assess_convergence()`. The plot below is for the scale parameter, which measures the variation between the individual rankings.
 
-```{r}
+```{r, eval=FALSE}
 assess_convergence(fit)
 ```
 
 Setting the burnin to 500, we obtain a plot of the posterior distribution of the scale parameter with:
 
-```{r}
+```{r, eval=FALSE}
 plot(fit, burnin = 500)
 ```
 
@@ -100,3 +208,8 @@ citation("BayesMallows")
 This is an open source project, and all contributions are welcome. Feel free to open an [Issue](https://github.com/ocbe-uio/BayesMallows/issues), a [Pull Request](https://github.com/ocbe-uio/BayesMallows/pulls), or to e-mail us.
 
 ## References
+
+
+
+
+

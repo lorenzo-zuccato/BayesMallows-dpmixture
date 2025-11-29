@@ -1,6 +1,152 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- Fork Notice -->
+
+**⚠️ Research Fork of BayesMallows**
+
+This repository extends the official **BayesMallows** package by
+implementing a **Dirichlet-process mixture model** for the Mallows
+model.  
+The purpose of this fork is to allow **automatic discovery of the number
+of clusters** in a population of assessors, using a Bayesian
+nonparametric approach.
+
+This version contains methods that are **currently undergoing peer
+review**. For the stable version of the package, please refer to the
+original repository.
+
+# New Methodology: Dirichlet-Process Mixture Model
+
+This fork introduces a **Dirichlet-process mixture model** for the
+Mallows model, allowing for:
+
+- Automatic detection of the number of clusters among assessors
+- Bayesian nonparametric inference
+- Integration within the existing BayesMallows framework
+
+## Installation
+
+To install this version of the package use the `remotes` package:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("lorenzo-zuccato/BayesMallows-dpmixture")
+```
+
+Load the package with
+
+``` r
+library(BayesMallowsDPMixture)
+```
+
+## Basic Usage Example
+
+Create synthetic data to test the DPMixture:
+
+``` r
+d1 <- sample_mallows(1:10, 5, 20)
+d2 <- sample_mallows(10:1, 2, 20)
+data <- rbind(d1,d2)
+```
+
+Run the MCMC with `compute_mallows_dpmixture`:
+
+``` r
+fit <- compute_mallows_dpmixture(data)
+```
+
+Trace plots to assess the convergence of the chain can be generated
+using the function `assess_convergence_dpmixture`, which, by default,
+displays the trend of the number of non-empty clusters.
+
+``` r
+assess_convergence_dpmixture(fit)
+```
+
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+
+The same function permits to plot either $\alpha$ or the estimated
+cluster proportions $\hat{\tau}$. In these cases, the user must specify
+the number of clusters to visualize in the `n` argument. The software
+will automatically show the clusters corresponding to the $n$ most
+persistent labels in the chain, where the persistence is defined as the
+number of samples in which the label is present among the cluster
+assignments.
+
+``` r
+assess_convergence_dpmixture(fit, parameter = "alpha", n = 5)
+```
+
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+assess_convergence_dpmixture(fit, parameter = "empirical_cluster_probs", n = 5)
+```
+
+![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
+
+Fix the burn-in using the command:
+
+``` r
+fit$burnin <- 200
+```
+
+Compute the co-clustering matrix with the function
+`compute_co_clustering`. This will discard the burn-in and compute the
+posterior probability for every two items to belong to the same cluster.
+
+``` r
+fit$co_clustering <- compute_co_clustering(fit)
+```
+
+Estimate a partition of the assessors after computing the co-clustering
+matrix with the function `partition_estimate`. Notice that this method
+calls the function `minVI` from the package `mcclust.ext` (see Wade and
+Ghahramani ([2015](#ref-wade2015))).
+
+``` r
+remotes::install_github("sarawade/mcclust.ext")
+```
+
+``` r
+library(mcclust.ext)
+#> Loading required package: mcclust
+#> Loading required package: lpSolve
+fit$partition <- partition_estimate(fit)
+```
+
+You can visualize the estimated number of non-empty clusters and their
+cardinality through the commands:
+
+``` r
+max(fit$partition$cl)
+#> [1] 2
+table(fit$partition$cl)
+#> 
+#>  1  2 
+#> 20 20
+```
+
+After a partition has been estimated, you can visualize the
+corresponding posterior distributions with the function `plot`, compute
+credible intervals with `compute_posterior_intervals` and estimate a
+consensus ranking with `compute_consensus`, in the same way as the
+original package `BayesMallows`.
+
+``` r
+plot(fit, parameter = "alpha")
+```
+
+![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
+
+``` r
+compute_posterior_intervals(fit, parameter = "alpha")
+#>     cluster parameter  mean median conf_level          hpdi central_interval
+#> 1 Cluster 1     alpha 5.402  5.478       95 % [4.561,6.661]    [4.271,6.468]
+#> 2 Cluster 2     alpha 1.544  1.452       95 % [0.305,2.660]    [0.531,3.337]
+```
+
 # BayesMallows
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/BayesMallows)](https://cran.r-project.org/package=BayesMallows)
@@ -54,16 +200,12 @@ which measures the variation between the individual rankings.
 assess_convergence(fit)
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
-
 Setting the burnin to 500, we obtain a plot of the posterior
 distribution of the scale parameter with:
 
 ``` r
 plot(fit, burnin = 500)
 ```
-
-![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
 For more examples, please our [R Journal
 paper](https://journal.r-project.org/archive/2020/RJ-2020-026/index.html),
@@ -155,7 +297,8 @@ us.
 
 ## References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-barrett2018" class="csl-entry">
 
@@ -239,6 +382,14 @@ Vitelli, V., Ø. Sørensen, M. Crispino, E. Arjas, and A. Frigessi. 2018.
 “Probabilistic Preference Learning with the Mallows Rank Model.”
 *Journal of Machine Learning Research* 18 (1): 1–49.
 <https://jmlr.org/papers/v18/15-481.html>.
+
+</div>
+
+<div id="ref-wade2015" class="csl-entry">
+
+Wade, Sara, and Zoubin Ghahramani. 2015. “Bayesian Cluster Analysis:
+Point Estimation and Credible Balls.” *Bayesian Analysis* 13 (May).
+<https://doi.org/10.1214/17-BA1073>.
 
 </div>
 

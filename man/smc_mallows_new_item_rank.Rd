@@ -83,8 +83,8 @@ at each time step. Each correction and augmentation is done by filling in the mi
 }
 \seealso{
 Other modeling: 
-\code{\link{compute_mallows_mixtures}()},
 \code{\link{compute_mallows}()},
+\code{\link{compute_mallows_mixtures}()},
 \code{\link{smc_mallows_new_users}()}
 }
 \concept{modeling}

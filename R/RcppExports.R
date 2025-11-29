@@ -20,15 +20,15 @@
 #' @references \insertAllCited{}
 #' @keywords internal
 get_rank_distance <- function(r1, r2, metric) {
-    .Call(`_BayesMallows_get_rank_distance`, r1, r2, metric)
+    .Call(`_BayesMallowsDPMixture_get_rank_distance`, r1, r2, metric)
 }
 
 rank_dist_sum <- function(rankings, rho, metric, obs_freq) {
-    .Call(`_BayesMallows_rank_dist_sum`, rankings, rho, metric, obs_freq)
+    .Call(`_BayesMallowsDPMixture_rank_dist_sum`, rankings, rho, metric, obs_freq)
 }
 
 rank_dist_vec <- function(rankings, rho, metric, obs_freq) {
-    .Call(`_BayesMallows_rank_dist_vec`, rankings, rho, metric, obs_freq)
+    .Call(`_BayesMallowsDPMixture_rank_dist_vec`, rankings, rho, metric, obs_freq)
 }
 
 #' Compute importance sampling estimates of log partition function
@@ -42,15 +42,15 @@ rank_dist_vec <- function(rankings, rho, metric, obs_freq) {
 #' @keywords internal
 #'
 compute_importance_sampling_estimate <- function(alpha_vector, n_items, metric = "footrule", nmc = 1e4L) {
-    .Call(`_BayesMallows_compute_importance_sampling_estimate`, alpha_vector, n_items, metric, nmc)
+    .Call(`_BayesMallowsDPMixture_compute_importance_sampling_estimate`, alpha_vector, n_items, metric, nmc)
 }
 
 leap_and_shiftR <- function(rho, leap_size) {
-    .Call(`_BayesMallows_leap_and_shiftR`, rho, leap_size)
+    .Call(`_BayesMallowsDPMixture_leap_and_shiftR`, rho, leap_size)
 }
 
 rtruncexp <- function(lambda, trunc) {
-    .Call(`_BayesMallows_rtruncexp`, lambda, trunc)
+    .Call(`_BayesMallowsDPMixture_rtruncexp`, lambda, trunc)
 }
 
 #' Compute the logarithm of the expected distance of metrics for a Mallows rank model
@@ -64,7 +64,7 @@ rtruncexp <- function(lambda, trunc) {
 #' @noRd
 #'
 log_expected_dist <- function(alpha, n_items, cardinalities, metric) {
-    .Call(`_BayesMallows_log_expected_dist`, alpha, n_items, cardinalities, metric)
+    .Call(`_BayesMallowsDPMixture_log_expected_dist`, alpha, n_items, cardinalities, metric)
 }
 
 #' Compute the logarithm of the partition function for a Mallows rank model
@@ -83,7 +83,7 @@ log_expected_dist <- function(alpha, n_items, cardinalities, metric) {
 #' @references \insertAllCited{}
 #'
 get_partition_function <- function(n_items, alpha, cardinalities = NULL, logz_estimate = NULL, metric = "footrule") {
-    .Call(`_BayesMallows_get_partition_function`, n_items, alpha, cardinalities, logz_estimate, metric)
+    .Call(`_BayesMallowsDPMixture_get_partition_function`, n_items, alpha, cardinalities, logz_estimate, metric)
 }
 
 #' Asymptotic Approximation of Partition Function
@@ -106,7 +106,7 @@ get_partition_function <- function(n_items, alpha, cardinalities = NULL, logz_es
 #' @references \insertAllCited{}
 #'
 asymptotic_partition_function <- function(alpha_vector, n_items, metric, K, n_iterations = 1000L, tol = 1e-9) {
-    .Call(`_BayesMallows_asymptotic_partition_function`, alpha_vector, n_items, metric, K, n_iterations, tol)
+    .Call(`_BayesMallowsDPMixture_asymptotic_partition_function`, alpha_vector, n_items, metric, K, n_iterations, tol)
 }
 
 #' Sample from the Mallows distribution.
@@ -130,7 +130,7 @@ asymptotic_partition_function <- function(alpha_vector, n_items, metric, K, n_it
 #' @references \insertAllCited{}
 #'
 rmallows <- function(rho0, alpha0, n_samples, burnin, thinning, leap_size = 1L, metric = "footrule") {
-    .Call(`_BayesMallows_rmallows`, rho0, alpha0, n_samples, burnin, thinning, leap_size, metric)
+    .Call(`_BayesMallowsDPMixture_rmallows`, rho0, alpha0, n_samples, burnin, thinning, leap_size, metric)
 }
 
 #' Worker function for computing the posterior distribution.
@@ -180,7 +180,7 @@ rmallows <- function(rho0, alpha0, n_samples, burnin, thinning, leap_size = 1L, 
 #' @keywords internal
 #'
 run_mcmc <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric = "footrule", error_model = "none", Lswap = 1L, n_clusters = 1L, include_wcd = FALSE, leap_size = 1L, alpha_prop_sd = 0.5, alpha_init = 5, alpha_jump = 1L, lambda = 0.1, alpha_max = 1e6, psi = 10L, rho_thinning = 1L, aug_thinning = 1L, clus_thin = 1L, save_aug = FALSE, verbose = FALSE, kappa_1 = 1.0, kappa_2 = 1.0, save_ind_clus = FALSE) {
-    .Call(`_BayesMallows_run_mcmc`, rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric, error_model, Lswap, n_clusters, include_wcd, leap_size, alpha_prop_sd, alpha_init, alpha_jump, lambda, alpha_max, psi, rho_thinning, aug_thinning, clus_thin, save_aug, verbose, kappa_1, kappa_2, save_ind_clus)
+    .Call(`_BayesMallowsDPMixture_run_mcmc`, rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric, error_model, Lswap, n_clusters, include_wcd, leap_size, alpha_prop_sd, alpha_init, alpha_jump, lambda, alpha_max, psi, rho_thinning, aug_thinning, clus_thin, save_aug, verbose, kappa_1, kappa_2, save_ind_clus)
 }
 
 #' Worker function for computing the posterior distribution.
@@ -222,7 +222,7 @@ run_mcmc <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_e
 #' @param kappa_2 Hyperparameter for \eqn{theta} in the Bernoulli error model. Defaults to 1.0.
 #'
 run_mcmc_dpmixture <- function(rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric = "footrule", error_model = "none", Lswap = 1L, leap_size = 1L, alpha_prop_sd = 0.5, alpha_init = 5, alpha_jump = 1L, lambda = 0.1, alpha_max = 100, psi = 0.1, psi_init = 1.0, rho_thinning = 1L, aug_thinning = 1L, clus_thin = 1L, save_aug = FALSE, verbose = FALSE, kappa_1 = 1.0, kappa_2 = 1.0) {
-    .Call(`_BayesMallows_run_mcmc_dpmixture`, rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric, error_model, Lswap, leap_size, alpha_prop_sd, alpha_init, alpha_jump, lambda, alpha_max, psi, psi_init, rho_thinning, aug_thinning, clus_thin, save_aug, verbose, kappa_1, kappa_2)
+    .Call(`_BayesMallowsDPMixture_run_mcmc_dpmixture`, rankings, obs_freq, nmc, constraints, cardinalities, logz_estimate, rho_init, metric, error_model, Lswap, leap_size, alpha_prop_sd, alpha_init, alpha_jump, lambda, alpha_max, psi, psi_init, rho_thinning, aug_thinning, clus_thin, save_aug, verbose, kappa_1, kappa_2)
 }
 
 #' @title Calculate Backward Probability
@@ -245,7 +245,7 @@ run_mcmc_dpmixture <- function(rankings, obs_freq, nmc, constraints, cardinaliti
 #' @export
 #' @keywords internal
 calculate_backward_probability <- function(item_ordering, partial_ranking, current_ranking, remaining_set, rho, alpha, n_items, metric = "footrule") {
-    .Call(`_BayesMallows_calculate_backward_probability`, item_ordering, partial_ranking, current_ranking, remaining_set, rho, alpha, n_items, metric)
+    .Call(`_BayesMallowsDPMixture_calculate_backward_probability`, item_ordering, partial_ranking, current_ranking, remaining_set, rho, alpha, n_items, metric)
 }
 
 #' @title Calculate Forward Probability
@@ -274,7 +274,7 @@ calculate_backward_probability <- function(item_ordering, partial_ranking, curre
 #'   augmentation.
 #' @keywords internal
 calculate_forward_probability <- function(item_ordering, partial_ranking, remaining_set, rho, alpha, n_items, metric = "footrule") {
-    .Call(`_BayesMallows_calculate_forward_probability`, item_ordering, partial_ranking, remaining_set, rho, alpha, n_items, metric)
+    .Call(`_BayesMallowsDPMixture_calculate_forward_probability`, item_ordering, partial_ranking, remaining_set, rho, alpha, n_items, metric)
 }
 
 #' @title Correction Kernel
@@ -294,7 +294,7 @@ calculate_forward_probability <- function(item_ordering, partial_ranking, remain
 #' that is compatible with the new observed ranking for a user
 #' @keywords internal
 correction_kernel <- function(observed_ranking, current_ranking, n_items) {
-    .Call(`_BayesMallows_correction_kernel`, observed_ranking, current_ranking, n_items)
+    .Call(`_BayesMallowsDPMixture_correction_kernel`, observed_ranking, current_ranking, n_items)
 }
 
 #' @title Correction Kernel (pseudolikelihood)
@@ -314,7 +314,7 @@ correction_kernel <- function(observed_ranking, current_ranking, n_items) {
 #'         forward_auxiliary_ranking_probability, a numerical value for the probability of correcting the ranking to be compatible with R_obs.
 #' @keywords internal
 correction_kernel_pseudo <- function(current_ranking, observed_ranking, rho, alpha, n_items, metric = "footrule") {
-    .Call(`_BayesMallows_correction_kernel_pseudo`, current_ranking, observed_ranking, rho, alpha, n_items, metric)
+    .Call(`_BayesMallowsDPMixture_correction_kernel_pseudo`, current_ranking, observed_ranking, rho, alpha, n_items, metric)
 }
 
 #' @title Get exponent in Mallows log-likelihood
@@ -361,7 +361,7 @@ correction_kernel_pseudo <- function(current_ranking, observed_ranking, rho, alp
 #'   metric = metric
 #' )
 get_exponent_sum <- function(alpha, rho, n_items, rankings, metric = "footrule") {
-    .Call(`_BayesMallows_get_exponent_sum`, alpha, rho, n_items, rankings, metric)
+    .Call(`_BayesMallowsDPMixture_get_exponent_sum`, alpha, rho, n_items, rankings, metric)
 }
 
 #' @title Get Sample Probabilities
@@ -381,7 +381,7 @@ get_exponent_sum <- function(alpha, rho, n_items, rankings, metric = "footrule")
 #' @noRd
 #'
 get_sample_probabilities <- function(rho_item_rank, alpha, remaining_set_ranks, n_items, metric = "footrule") {
-    .Call(`_BayesMallows_get_sample_probabilities`, rho_item_rank, alpha, remaining_set_ranks, n_items, metric)
+    .Call(`_BayesMallowsDPMixture_get_sample_probabilities`, rho_item_rank, alpha, remaining_set_ranks, n_items, metric)
 }
 
 #' @title Leap and Shift Probabilities
@@ -407,7 +407,7 @@ get_sample_probabilities <- function(rho_item_rank, alpha, remaining_set_ranks, 
 #' leap_and_shift_probs(rho, n_items, 3)
 #'
 leap_and_shift_probs <- function(rho, n_items, leap_size = 1L) {
-    .Call(`_BayesMallows_leap_and_shift_probs`, rho, n_items, leap_size)
+    .Call(`_BayesMallowsDPMixture_leap_and_shift_probs`, rho, n_items, leap_size)
 }
 
 #' @title SMC-Mallows new item rank
@@ -449,7 +449,7 @@ leap_and_shift_probs <- function(rho, n_items, leap_size = 1L) {
 #' @family modeling
 #'
 smc_mallows_new_item_rank <- function(n_items, R_obs, N, Time, logz_estimate, cardinalities, mcmc_kernel_app, aug_rankings_init = NULL, rho_samples_init = NULL, alpha_samples_init = 0L, alpha = 0, alpha_prop_sd = 0.5, lambda = 0.1, alpha_max = 1e6, aug_method = "random", verbose = FALSE, alpha_fixed = FALSE, metric = "footrule", leap_size = 1L) {
-    .Call(`_BayesMallows_smc_mallows_new_item_rank`, n_items, R_obs, N, Time, logz_estimate, cardinalities, mcmc_kernel_app, aug_rankings_init, rho_samples_init, alpha_samples_init, alpha, alpha_prop_sd, lambda, alpha_max, aug_method, verbose, alpha_fixed, metric, leap_size)
+    .Call(`_BayesMallowsDPMixture_smc_mallows_new_item_rank`, n_items, R_obs, N, Time, logz_estimate, cardinalities, mcmc_kernel_app, aug_rankings_init, rho_samples_init, alpha_samples_init, alpha, alpha_prop_sd, lambda, alpha_max, aug_method, verbose, alpha_fixed, metric, leap_size)
 }
 
 #' @title SMC-Mallows New Users
@@ -502,7 +502,7 @@ smc_mallows_new_item_rank <- function(n_items, R_obs, N, Time, logz_estimate, ca
 #' @family modeling
 #'
 smc_mallows_new_users <- function(R_obs, type, n_items, N, Time, mcmc_kernel_app, num_new_obs, alpha_prop_sd = 0.5, lambda = 0.1, alpha_max = 1e6, alpha = 0, aug_method = "random", logz_estimate = NULL, cardinalities = NULL, verbose = FALSE, metric = "footnote", leap_size = 1L) {
-    .Call(`_BayesMallows_smc_mallows_new_users`, R_obs, type, n_items, N, Time, mcmc_kernel_app, num_new_obs, alpha_prop_sd, lambda, alpha_max, alpha, aug_method, logz_estimate, cardinalities, verbose, metric, leap_size)
+    .Call(`_BayesMallowsDPMixture_smc_mallows_new_users`, R_obs, type, n_items, N, Time, mcmc_kernel_app, num_new_obs, alpha_prop_sd, lambda, alpha_max, alpha, aug_method, logz_estimate, cardinalities, verbose, metric, leap_size)
 }
 
 #' @title Metropolis-Hastings Alpha
@@ -537,7 +537,7 @@ smc_mallows_new_users <- function(R_obs, type, n_items, N, Time, mcmc_kernel_app
 #' @example /inst/examples/metropolis_hastings_alpha_example.R
 #' @noRd
 metropolis_hastings_alpha <- function(alpha, n_items, rankings, rho, logz_estimate, cardinalities, metric = "footrule", alpha_prop_sd = 0.5, alpha_max = 1e6, lambda = 0.1) {
-    .Call(`_BayesMallows_metropolis_hastings_alpha`, alpha, n_items, rankings, rho, logz_estimate, cardinalities, metric, alpha_prop_sd, alpha_max, lambda)
+    .Call(`_BayesMallowsDPMixture_metropolis_hastings_alpha`, alpha, n_items, rankings, rho, logz_estimate, cardinalities, metric, alpha_prop_sd, alpha_max, lambda)
 }
 
 #' @title Metropolis-Hastings Augmented Ranking
@@ -556,7 +556,7 @@ metropolis_hastings_alpha <- function(alpha, n_items, rankings, rho, logz_estima
 #' @return R_curr or R_obs A ranking sequence vector representing proposed augmented ranking for next iteration of MCMC chain
 #' @noRd
 metropolis_hastings_aug_ranking <- function(alpha, rho, n_items, partial_ranking, current_ranking, pseudo, metric = "footnote") {
-    .Call(`_BayesMallows_metropolis_hastings_aug_ranking`, alpha, rho, n_items, partial_ranking, current_ranking, pseudo, metric)
+    .Call(`_BayesMallowsDPMixture_metropolis_hastings_aug_ranking`, alpha, rho, n_items, partial_ranking, current_ranking, pseudo, metric)
 }
 
 #' @title Metropolis-Hastings Rho
@@ -595,6 +595,6 @@ metropolis_hastings_aug_ranking <- function(alpha, rho, n_items, partial_ranking
 #' )
 #'
 metropolis_hastings_rho <- function(alpha, n_items, rankings, rho, metric = "footnote", leap_size = 1L) {
-    .Call(`_BayesMallows_metropolis_hastings_rho`, alpha, n_items, rankings, rho, metric, leap_size)
+    .Call(`_BayesMallowsDPMixture_metropolis_hastings_rho`, alpha, n_items, rankings, rho, metric, leap_size)
 }
 

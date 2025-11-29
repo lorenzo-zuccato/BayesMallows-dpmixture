@@ -13,7 +13,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // get_rank_distance
 double get_rank_distance(arma::vec r1, arma::vec r2, std::string metric);
-RcppExport SEXP _BayesMallows_get_rank_distance(SEXP r1SEXP, SEXP r2SEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_get_rank_distance(SEXP r1SEXP, SEXP r2SEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -26,7 +26,7 @@ END_RCPP
 }
 // rank_dist_sum
 double rank_dist_sum(const arma::mat& rankings, const arma::vec& rho, const std::string& metric, const arma::vec& obs_freq);
-RcppExport SEXP _BayesMallows_rank_dist_sum(SEXP rankingsSEXP, SEXP rhoSEXP, SEXP metricSEXP, SEXP obs_freqSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_rank_dist_sum(SEXP rankingsSEXP, SEXP rhoSEXP, SEXP metricSEXP, SEXP obs_freqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -40,7 +40,7 @@ END_RCPP
 }
 // rank_dist_vec
 arma::vec rank_dist_vec(const arma::mat& rankings, const arma::vec& rho, const std::string& metric, const arma::vec& obs_freq);
-RcppExport SEXP _BayesMallows_rank_dist_vec(SEXP rankingsSEXP, SEXP rhoSEXP, SEXP metricSEXP, SEXP obs_freqSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_rank_dist_vec(SEXP rankingsSEXP, SEXP rhoSEXP, SEXP metricSEXP, SEXP obs_freqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -54,7 +54,7 @@ END_RCPP
 }
 // compute_importance_sampling_estimate
 arma::vec compute_importance_sampling_estimate(arma::vec alpha_vector, int n_items, std::string metric, int nmc);
-RcppExport SEXP _BayesMallows_compute_importance_sampling_estimate(SEXP alpha_vectorSEXP, SEXP n_itemsSEXP, SEXP metricSEXP, SEXP nmcSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_compute_importance_sampling_estimate(SEXP alpha_vectorSEXP, SEXP n_itemsSEXP, SEXP metricSEXP, SEXP nmcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -68,7 +68,7 @@ END_RCPP
 }
 // leap_and_shiftR
 arma::vec leap_and_shiftR(const arma::vec& rho, int leap_size);
-RcppExport SEXP _BayesMallows_leap_and_shiftR(SEXP rhoSEXP, SEXP leap_sizeSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_leap_and_shiftR(SEXP rhoSEXP, SEXP leap_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -80,7 +80,7 @@ END_RCPP
 }
 // rtruncexp
 double rtruncexp(double lambda, double trunc);
-RcppExport SEXP _BayesMallows_rtruncexp(SEXP lambdaSEXP, SEXP truncSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_rtruncexp(SEXP lambdaSEXP, SEXP truncSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -92,7 +92,7 @@ END_RCPP
 }
 // log_expected_dist
 double log_expected_dist(const double& alpha, const int& n_items, const arma::vec& cardinalities, const std::string& metric);
-RcppExport SEXP _BayesMallows_log_expected_dist(SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP cardinalitiesSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_log_expected_dist(SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP cardinalitiesSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -106,7 +106,7 @@ END_RCPP
 }
 // get_partition_function
 double get_partition_function(int n_items, double alpha, const Rcpp::Nullable<arma::vec> cardinalities, const Rcpp::Nullable<arma::vec> logz_estimate, std::string metric);
-RcppExport SEXP _BayesMallows_get_partition_function(SEXP n_itemsSEXP, SEXP alphaSEXP, SEXP cardinalitiesSEXP, SEXP logz_estimateSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_get_partition_function(SEXP n_itemsSEXP, SEXP alphaSEXP, SEXP cardinalitiesSEXP, SEXP logz_estimateSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -121,7 +121,7 @@ END_RCPP
 }
 // asymptotic_partition_function
 arma::vec asymptotic_partition_function(arma::vec alpha_vector, int n_items, std::string metric, int K, int n_iterations, double tol);
-RcppExport SEXP _BayesMallows_asymptotic_partition_function(SEXP alpha_vectorSEXP, SEXP n_itemsSEXP, SEXP metricSEXP, SEXP KSEXP, SEXP n_iterationsSEXP, SEXP tolSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_asymptotic_partition_function(SEXP alpha_vectorSEXP, SEXP n_itemsSEXP, SEXP metricSEXP, SEXP KSEXP, SEXP n_iterationsSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -137,7 +137,7 @@ END_RCPP
 }
 // rmallows
 arma::mat rmallows(arma::vec rho0, double alpha0, int n_samples, int burnin, int thinning, int leap_size, std::string metric);
-RcppExport SEXP _BayesMallows_rmallows(SEXP rho0SEXP, SEXP alpha0SEXP, SEXP n_samplesSEXP, SEXP burninSEXP, SEXP thinningSEXP, SEXP leap_sizeSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_rmallows(SEXP rho0SEXP, SEXP alpha0SEXP, SEXP n_samplesSEXP, SEXP burninSEXP, SEXP thinningSEXP, SEXP leap_sizeSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -154,7 +154,7 @@ END_RCPP
 }
 // run_mcmc
 Rcpp::List run_mcmc(arma::mat rankings, arma::vec obs_freq, int nmc, Rcpp::List constraints, Rcpp::Nullable<arma::vec> cardinalities, Rcpp::Nullable<arma::vec> logz_estimate, Rcpp::Nullable<arma::mat> rho_init, std::string metric, std::string error_model, int Lswap, int n_clusters, bool include_wcd, int leap_size, double alpha_prop_sd, double alpha_init, int alpha_jump, double lambda, double alpha_max, int psi, int rho_thinning, int aug_thinning, int clus_thin, bool save_aug, bool verbose, double kappa_1, double kappa_2, bool save_ind_clus);
-RcppExport SEXP _BayesMallows_run_mcmc(SEXP rankingsSEXP, SEXP obs_freqSEXP, SEXP nmcSEXP, SEXP constraintsSEXP, SEXP cardinalitiesSEXP, SEXP logz_estimateSEXP, SEXP rho_initSEXP, SEXP metricSEXP, SEXP error_modelSEXP, SEXP LswapSEXP, SEXP n_clustersSEXP, SEXP include_wcdSEXP, SEXP leap_sizeSEXP, SEXP alpha_prop_sdSEXP, SEXP alpha_initSEXP, SEXP alpha_jumpSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP psiSEXP, SEXP rho_thinningSEXP, SEXP aug_thinningSEXP, SEXP clus_thinSEXP, SEXP save_augSEXP, SEXP verboseSEXP, SEXP kappa_1SEXP, SEXP kappa_2SEXP, SEXP save_ind_clusSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_run_mcmc(SEXP rankingsSEXP, SEXP obs_freqSEXP, SEXP nmcSEXP, SEXP constraintsSEXP, SEXP cardinalitiesSEXP, SEXP logz_estimateSEXP, SEXP rho_initSEXP, SEXP metricSEXP, SEXP error_modelSEXP, SEXP LswapSEXP, SEXP n_clustersSEXP, SEXP include_wcdSEXP, SEXP leap_sizeSEXP, SEXP alpha_prop_sdSEXP, SEXP alpha_initSEXP, SEXP alpha_jumpSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP psiSEXP, SEXP rho_thinningSEXP, SEXP aug_thinningSEXP, SEXP clus_thinSEXP, SEXP save_augSEXP, SEXP verboseSEXP, SEXP kappa_1SEXP, SEXP kappa_2SEXP, SEXP save_ind_clusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -191,7 +191,7 @@ END_RCPP
 }
 // run_mcmc_dpmixture
 Rcpp::List run_mcmc_dpmixture(arma::mat rankings, arma::vec obs_freq, int nmc, Rcpp::List constraints, Rcpp::Nullable<arma::vec> cardinalities, Rcpp::Nullable<arma::vec> logz_estimate, Rcpp::Nullable<arma::mat> rho_init, std::string metric, std::string error_model, int Lswap, int leap_size, double alpha_prop_sd, double alpha_init, int alpha_jump, double lambda, double alpha_max, double psi, double psi_init, int rho_thinning, int aug_thinning, int clus_thin, bool save_aug, bool verbose, double kappa_1, double kappa_2);
-RcppExport SEXP _BayesMallows_run_mcmc_dpmixture(SEXP rankingsSEXP, SEXP obs_freqSEXP, SEXP nmcSEXP, SEXP constraintsSEXP, SEXP cardinalitiesSEXP, SEXP logz_estimateSEXP, SEXP rho_initSEXP, SEXP metricSEXP, SEXP error_modelSEXP, SEXP LswapSEXP, SEXP leap_sizeSEXP, SEXP alpha_prop_sdSEXP, SEXP alpha_initSEXP, SEXP alpha_jumpSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP psiSEXP, SEXP psi_initSEXP, SEXP rho_thinningSEXP, SEXP aug_thinningSEXP, SEXP clus_thinSEXP, SEXP save_augSEXP, SEXP verboseSEXP, SEXP kappa_1SEXP, SEXP kappa_2SEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_run_mcmc_dpmixture(SEXP rankingsSEXP, SEXP obs_freqSEXP, SEXP nmcSEXP, SEXP constraintsSEXP, SEXP cardinalitiesSEXP, SEXP logz_estimateSEXP, SEXP rho_initSEXP, SEXP metricSEXP, SEXP error_modelSEXP, SEXP LswapSEXP, SEXP leap_sizeSEXP, SEXP alpha_prop_sdSEXP, SEXP alpha_initSEXP, SEXP alpha_jumpSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP psiSEXP, SEXP psi_initSEXP, SEXP rho_thinningSEXP, SEXP aug_thinningSEXP, SEXP clus_thinSEXP, SEXP save_augSEXP, SEXP verboseSEXP, SEXP kappa_1SEXP, SEXP kappa_2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -226,7 +226,7 @@ END_RCPP
 }
 // calculate_backward_probability
 double calculate_backward_probability(arma::uvec item_ordering, arma::vec partial_ranking, arma::vec current_ranking, arma::vec remaining_set, const arma::vec rho, const double alpha, const int n_items, const std::string metric);
-RcppExport SEXP _BayesMallows_calculate_backward_probability(SEXP item_orderingSEXP, SEXP partial_rankingSEXP, SEXP current_rankingSEXP, SEXP remaining_setSEXP, SEXP rhoSEXP, SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_calculate_backward_probability(SEXP item_orderingSEXP, SEXP partial_rankingSEXP, SEXP current_rankingSEXP, SEXP remaining_setSEXP, SEXP rhoSEXP, SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -244,7 +244,7 @@ END_RCPP
 }
 // calculate_forward_probability
 Rcpp::List calculate_forward_probability(arma::uvec item_ordering, arma::vec partial_ranking, arma::vec remaining_set, const arma::vec rho, const double alpha, const int n_items, const std::string metric);
-RcppExport SEXP _BayesMallows_calculate_forward_probability(SEXP item_orderingSEXP, SEXP partial_rankingSEXP, SEXP remaining_setSEXP, SEXP rhoSEXP, SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_calculate_forward_probability(SEXP item_orderingSEXP, SEXP partial_rankingSEXP, SEXP remaining_setSEXP, SEXP rhoSEXP, SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -261,7 +261,7 @@ END_RCPP
 }
 // correction_kernel
 Rcpp::List correction_kernel(const arma::vec observed_ranking, const arma::vec current_ranking, const int n_items);
-RcppExport SEXP _BayesMallows_correction_kernel(SEXP observed_rankingSEXP, SEXP current_rankingSEXP, SEXP n_itemsSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_correction_kernel(SEXP observed_rankingSEXP, SEXP current_rankingSEXP, SEXP n_itemsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -274,7 +274,7 @@ END_RCPP
 }
 // correction_kernel_pseudo
 Rcpp::List correction_kernel_pseudo(const arma::vec current_ranking, arma::vec observed_ranking, const arma::vec rho, const double alpha, const int n_items, const std::string metric);
-RcppExport SEXP _BayesMallows_correction_kernel_pseudo(SEXP current_rankingSEXP, SEXP observed_rankingSEXP, SEXP rhoSEXP, SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_correction_kernel_pseudo(SEXP current_rankingSEXP, SEXP observed_rankingSEXP, SEXP rhoSEXP, SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -290,7 +290,7 @@ END_RCPP
 }
 // get_exponent_sum
 double get_exponent_sum(const double alpha, const arma::vec rho, const int n_items, arma::mat rankings, const std::string metric);
-RcppExport SEXP _BayesMallows_get_exponent_sum(SEXP alphaSEXP, SEXP rhoSEXP, SEXP n_itemsSEXP, SEXP rankingsSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_get_exponent_sum(SEXP alphaSEXP, SEXP rhoSEXP, SEXP n_itemsSEXP, SEXP rankingsSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -305,7 +305,7 @@ END_RCPP
 }
 // get_sample_probabilities
 arma::vec get_sample_probabilities(const arma::vec rho_item_rank, const double alpha, const arma::vec remaining_set_ranks, const int n_items, const std::string metric);
-RcppExport SEXP _BayesMallows_get_sample_probabilities(SEXP rho_item_rankSEXP, SEXP alphaSEXP, SEXP remaining_set_ranksSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_get_sample_probabilities(SEXP rho_item_rankSEXP, SEXP alphaSEXP, SEXP remaining_set_ranksSEXP, SEXP n_itemsSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -320,7 +320,7 @@ END_RCPP
 }
 // leap_and_shift_probs
 Rcpp::List leap_and_shift_probs(const arma::vec rho, const int n_items, const int leap_size);
-RcppExport SEXP _BayesMallows_leap_and_shift_probs(SEXP rhoSEXP, SEXP n_itemsSEXP, SEXP leap_sizeSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_leap_and_shift_probs(SEXP rhoSEXP, SEXP n_itemsSEXP, SEXP leap_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -333,7 +333,7 @@ END_RCPP
 }
 // smc_mallows_new_item_rank
 Rcpp::List smc_mallows_new_item_rank(const unsigned int& n_items, arma::cube& R_obs, const unsigned int& N, const unsigned int Time, const Rcpp::Nullable<arma::vec> logz_estimate, const Rcpp::Nullable<arma::vec> cardinalities, const int& mcmc_kernel_app, Rcpp::Nullable<arma::cube> aug_rankings_init, Rcpp::Nullable<arma::mat> rho_samples_init, arma::vec alpha_samples_init, const double alpha, const double alpha_prop_sd, const double lambda, const double alpha_max, const std::string& aug_method, const bool verbose, const bool alpha_fixed, const std::string& metric, const int& leap_size);
-RcppExport SEXP _BayesMallows_smc_mallows_new_item_rank(SEXP n_itemsSEXP, SEXP R_obsSEXP, SEXP NSEXP, SEXP TimeSEXP, SEXP logz_estimateSEXP, SEXP cardinalitiesSEXP, SEXP mcmc_kernel_appSEXP, SEXP aug_rankings_initSEXP, SEXP rho_samples_initSEXP, SEXP alpha_samples_initSEXP, SEXP alphaSEXP, SEXP alpha_prop_sdSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP aug_methodSEXP, SEXP verboseSEXP, SEXP alpha_fixedSEXP, SEXP metricSEXP, SEXP leap_sizeSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_smc_mallows_new_item_rank(SEXP n_itemsSEXP, SEXP R_obsSEXP, SEXP NSEXP, SEXP TimeSEXP, SEXP logz_estimateSEXP, SEXP cardinalitiesSEXP, SEXP mcmc_kernel_appSEXP, SEXP aug_rankings_initSEXP, SEXP rho_samples_initSEXP, SEXP alpha_samples_initSEXP, SEXP alphaSEXP, SEXP alpha_prop_sdSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP aug_methodSEXP, SEXP verboseSEXP, SEXP alpha_fixedSEXP, SEXP metricSEXP, SEXP leap_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -362,7 +362,7 @@ END_RCPP
 }
 // smc_mallows_new_users
 Rcpp::List smc_mallows_new_users(const arma::mat& R_obs, const std::string& type, const int& n_items, const int& N, int Time, const int& mcmc_kernel_app, const int& num_new_obs, const double alpha_prop_sd, const double lambda, const double alpha_max, const double alpha, const std::string& aug_method, const Rcpp::Nullable<arma::vec>& logz_estimate, const Rcpp::Nullable<arma::vec>& cardinalities, const bool verbose, const std::string& metric, const int& leap_size);
-RcppExport SEXP _BayesMallows_smc_mallows_new_users(SEXP R_obsSEXP, SEXP typeSEXP, SEXP n_itemsSEXP, SEXP NSEXP, SEXP TimeSEXP, SEXP mcmc_kernel_appSEXP, SEXP num_new_obsSEXP, SEXP alpha_prop_sdSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP alphaSEXP, SEXP aug_methodSEXP, SEXP logz_estimateSEXP, SEXP cardinalitiesSEXP, SEXP verboseSEXP, SEXP metricSEXP, SEXP leap_sizeSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_smc_mallows_new_users(SEXP R_obsSEXP, SEXP typeSEXP, SEXP n_itemsSEXP, SEXP NSEXP, SEXP TimeSEXP, SEXP mcmc_kernel_appSEXP, SEXP num_new_obsSEXP, SEXP alpha_prop_sdSEXP, SEXP lambdaSEXP, SEXP alpha_maxSEXP, SEXP alphaSEXP, SEXP aug_methodSEXP, SEXP logz_estimateSEXP, SEXP cardinalitiesSEXP, SEXP verboseSEXP, SEXP metricSEXP, SEXP leap_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -389,7 +389,7 @@ END_RCPP
 }
 // metropolis_hastings_alpha
 double metropolis_hastings_alpha(const double alpha, const int n_items, const arma::mat rankings, const arma::vec rho, const Rcpp::Nullable<arma::vec> logz_estimate, const Rcpp::Nullable<arma::vec> cardinalities, const std::string metric, const double alpha_prop_sd, const double alpha_max, const double lambda);
-RcppExport SEXP _BayesMallows_metropolis_hastings_alpha(SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP rankingsSEXP, SEXP rhoSEXP, SEXP logz_estimateSEXP, SEXP cardinalitiesSEXP, SEXP metricSEXP, SEXP alpha_prop_sdSEXP, SEXP alpha_maxSEXP, SEXP lambdaSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_metropolis_hastings_alpha(SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP rankingsSEXP, SEXP rhoSEXP, SEXP logz_estimateSEXP, SEXP cardinalitiesSEXP, SEXP metricSEXP, SEXP alpha_prop_sdSEXP, SEXP alpha_maxSEXP, SEXP lambdaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -409,7 +409,7 @@ END_RCPP
 }
 // metropolis_hastings_aug_ranking
 arma::vec metropolis_hastings_aug_ranking(const double& alpha, const arma::vec& rho, const int& n_items, const arma::vec& partial_ranking, const arma::vec& current_ranking, const bool& pseudo, const std::string& metric);
-RcppExport SEXP _BayesMallows_metropolis_hastings_aug_ranking(SEXP alphaSEXP, SEXP rhoSEXP, SEXP n_itemsSEXP, SEXP partial_rankingSEXP, SEXP current_rankingSEXP, SEXP pseudoSEXP, SEXP metricSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_metropolis_hastings_aug_ranking(SEXP alphaSEXP, SEXP rhoSEXP, SEXP n_itemsSEXP, SEXP partial_rankingSEXP, SEXP current_rankingSEXP, SEXP pseudoSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -426,7 +426,7 @@ END_RCPP
 }
 // metropolis_hastings_rho
 arma::vec metropolis_hastings_rho(const double alpha, const int n_items, const arma::mat rankings, const arma::vec rho, const std::string metric, const int leap_size);
-RcppExport SEXP _BayesMallows_metropolis_hastings_rho(SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP rankingsSEXP, SEXP rhoSEXP, SEXP metricSEXP, SEXP leap_sizeSEXP) {
+RcppExport SEXP _BayesMallowsDPMixture_metropolis_hastings_rho(SEXP alphaSEXP, SEXP n_itemsSEXP, SEXP rankingsSEXP, SEXP rhoSEXP, SEXP metricSEXP, SEXP leap_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -441,38 +441,35 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP run_testthat_tests(SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
-    {"_BayesMallows_get_rank_distance", (DL_FUNC) &_BayesMallows_get_rank_distance, 3},
-    {"_BayesMallows_rank_dist_sum", (DL_FUNC) &_BayesMallows_rank_dist_sum, 4},
-    {"_BayesMallows_rank_dist_vec", (DL_FUNC) &_BayesMallows_rank_dist_vec, 4},
-    {"_BayesMallows_compute_importance_sampling_estimate", (DL_FUNC) &_BayesMallows_compute_importance_sampling_estimate, 4},
-    {"_BayesMallows_leap_and_shiftR", (DL_FUNC) &_BayesMallows_leap_and_shiftR, 2},
-    {"_BayesMallows_rtruncexp", (DL_FUNC) &_BayesMallows_rtruncexp, 2},
-    {"_BayesMallows_log_expected_dist", (DL_FUNC) &_BayesMallows_log_expected_dist, 4},
-    {"_BayesMallows_get_partition_function", (DL_FUNC) &_BayesMallows_get_partition_function, 5},
-    {"_BayesMallows_asymptotic_partition_function", (DL_FUNC) &_BayesMallows_asymptotic_partition_function, 6},
-    {"_BayesMallows_rmallows", (DL_FUNC) &_BayesMallows_rmallows, 7},
-    {"_BayesMallows_run_mcmc", (DL_FUNC) &_BayesMallows_run_mcmc, 27},
-    {"_BayesMallows_run_mcmc_dpmixture", (DL_FUNC) &_BayesMallows_run_mcmc_dpmixture, 25},
-    {"_BayesMallows_calculate_backward_probability", (DL_FUNC) &_BayesMallows_calculate_backward_probability, 8},
-    {"_BayesMallows_calculate_forward_probability", (DL_FUNC) &_BayesMallows_calculate_forward_probability, 7},
-    {"_BayesMallows_correction_kernel", (DL_FUNC) &_BayesMallows_correction_kernel, 3},
-    {"_BayesMallows_correction_kernel_pseudo", (DL_FUNC) &_BayesMallows_correction_kernel_pseudo, 6},
-    {"_BayesMallows_get_exponent_sum", (DL_FUNC) &_BayesMallows_get_exponent_sum, 5},
-    {"_BayesMallows_get_sample_probabilities", (DL_FUNC) &_BayesMallows_get_sample_probabilities, 5},
-    {"_BayesMallows_leap_and_shift_probs", (DL_FUNC) &_BayesMallows_leap_and_shift_probs, 3},
-    {"_BayesMallows_smc_mallows_new_item_rank", (DL_FUNC) &_BayesMallows_smc_mallows_new_item_rank, 19},
-    {"_BayesMallows_smc_mallows_new_users", (DL_FUNC) &_BayesMallows_smc_mallows_new_users, 17},
-    {"_BayesMallows_metropolis_hastings_alpha", (DL_FUNC) &_BayesMallows_metropolis_hastings_alpha, 10},
-    {"_BayesMallows_metropolis_hastings_aug_ranking", (DL_FUNC) &_BayesMallows_metropolis_hastings_aug_ranking, 7},
-    {"_BayesMallows_metropolis_hastings_rho", (DL_FUNC) &_BayesMallows_metropolis_hastings_rho, 6},
-    {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 1},
+    {"_BayesMallowsDPMixture_get_rank_distance", (DL_FUNC) &_BayesMallowsDPMixture_get_rank_distance, 3},
+    {"_BayesMallowsDPMixture_rank_dist_sum", (DL_FUNC) &_BayesMallowsDPMixture_rank_dist_sum, 4},
+    {"_BayesMallowsDPMixture_rank_dist_vec", (DL_FUNC) &_BayesMallowsDPMixture_rank_dist_vec, 4},
+    {"_BayesMallowsDPMixture_compute_importance_sampling_estimate", (DL_FUNC) &_BayesMallowsDPMixture_compute_importance_sampling_estimate, 4},
+    {"_BayesMallowsDPMixture_leap_and_shiftR", (DL_FUNC) &_BayesMallowsDPMixture_leap_and_shiftR, 2},
+    {"_BayesMallowsDPMixture_rtruncexp", (DL_FUNC) &_BayesMallowsDPMixture_rtruncexp, 2},
+    {"_BayesMallowsDPMixture_log_expected_dist", (DL_FUNC) &_BayesMallowsDPMixture_log_expected_dist, 4},
+    {"_BayesMallowsDPMixture_get_partition_function", (DL_FUNC) &_BayesMallowsDPMixture_get_partition_function, 5},
+    {"_BayesMallowsDPMixture_asymptotic_partition_function", (DL_FUNC) &_BayesMallowsDPMixture_asymptotic_partition_function, 6},
+    {"_BayesMallowsDPMixture_rmallows", (DL_FUNC) &_BayesMallowsDPMixture_rmallows, 7},
+    {"_BayesMallowsDPMixture_run_mcmc", (DL_FUNC) &_BayesMallowsDPMixture_run_mcmc, 27},
+    {"_BayesMallowsDPMixture_run_mcmc_dpmixture", (DL_FUNC) &_BayesMallowsDPMixture_run_mcmc_dpmixture, 25},
+    {"_BayesMallowsDPMixture_calculate_backward_probability", (DL_FUNC) &_BayesMallowsDPMixture_calculate_backward_probability, 8},
+    {"_BayesMallowsDPMixture_calculate_forward_probability", (DL_FUNC) &_BayesMallowsDPMixture_calculate_forward_probability, 7},
+    {"_BayesMallowsDPMixture_correction_kernel", (DL_FUNC) &_BayesMallowsDPMixture_correction_kernel, 3},
+    {"_BayesMallowsDPMixture_correction_kernel_pseudo", (DL_FUNC) &_BayesMallowsDPMixture_correction_kernel_pseudo, 6},
+    {"_BayesMallowsDPMixture_get_exponent_sum", (DL_FUNC) &_BayesMallowsDPMixture_get_exponent_sum, 5},
+    {"_BayesMallowsDPMixture_get_sample_probabilities", (DL_FUNC) &_BayesMallowsDPMixture_get_sample_probabilities, 5},
+    {"_BayesMallowsDPMixture_leap_and_shift_probs", (DL_FUNC) &_BayesMallowsDPMixture_leap_and_shift_probs, 3},
+    {"_BayesMallowsDPMixture_smc_mallows_new_item_rank", (DL_FUNC) &_BayesMallowsDPMixture_smc_mallows_new_item_rank, 19},
+    {"_BayesMallowsDPMixture_smc_mallows_new_users", (DL_FUNC) &_BayesMallowsDPMixture_smc_mallows_new_users, 17},
+    {"_BayesMallowsDPMixture_metropolis_hastings_alpha", (DL_FUNC) &_BayesMallowsDPMixture_metropolis_hastings_alpha, 10},
+    {"_BayesMallowsDPMixture_metropolis_hastings_aug_ranking", (DL_FUNC) &_BayesMallowsDPMixture_metropolis_hastings_aug_ranking, 7},
+    {"_BayesMallowsDPMixture_metropolis_hastings_rho", (DL_FUNC) &_BayesMallowsDPMixture_metropolis_hastings_rho, 6},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_BayesMallows(DllInfo *dll) {
+RcppExport void R_init_BayesMallowsDPMixture(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
