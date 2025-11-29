@@ -44,7 +44,7 @@ To install this version of the package use the `remotes` package:
 
 ```{r,eval=FALSE}
 # install.packages("remotes")
-remotes::install_github("lorenzo-zuccato/BayesMallows-dpmixture")
+remotes::install_github("lorenzo-zuccato/BayesMallows-dpmixture", ref = "dpmixture")
 ```
 
 Load the package with
