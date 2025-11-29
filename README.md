@@ -45,6 +45,7 @@ library(BayesMallowsDPMixture)
 Create synthetic data to test the DPMixture:
 
 ``` r
+set.seed(123)
 d1 <- sample_mallows(1:10, 5, 20)
 d2 <- sample_mallows(10:1, 2, 20)
 data <- rbind(d1,d2)
@@ -125,7 +126,7 @@ max(fit$partition$cl)
 table(fit$partition$cl)
 #> 
 #>  1  2 
-#> 19 21
+#> 20 20
 ```
 
 After a partition has been estimated, you can visualize the
@@ -143,8 +144,8 @@ plot(fit, parameter = "alpha")
 ``` r
 compute_posterior_intervals(fit, parameter = "alpha")
 #>     cluster parameter  mean median conf_level          hpdi central_interval
-#> 1 Cluster 1     alpha 4.303  4.529       95 % [1.316,5.790]    [1.038,5.628]
-#> 2 Cluster 2     alpha 1.406  1.280       95 % [0.166,3.026]    [0.326,4.318]
+#> 1 Cluster 1     alpha 5.359  5.363       95 % [4.581,6.255]    [4.520,6.210]
+#> 2 Cluster 2     alpha 1.869  1.847       95 % [1.139,2.584]    [1.153,2.653]
 ```
 
 # BayesMallows

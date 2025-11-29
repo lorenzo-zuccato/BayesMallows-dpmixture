@@ -58,6 +58,7 @@ library(BayesMallowsDPMixture)
 Create synthetic data to test the DPMixture:
 
 ```{r}
+set.seed(123)
 d1 <- sample_mallows(1:10, 5, 20)
 d2 <- sample_mallows(10:1, 2, 20)
 data <- rbind(d1,d2)
