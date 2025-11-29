@@ -31,7 +31,7 @@ To install this version of the package use the `remotes` package:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("lorenzo-zuccato/BayesMallows-dpmixture")
+remotes::install_github("lorenzo-zuccato/BayesMallows-dpmixture", ref = "dpmixture")
 ```
 
 Load the package with
@@ -125,7 +125,7 @@ max(fit$partition$cl)
 table(fit$partition$cl)
 #> 
 #>  1  2 
-#> 20 20
+#> 19 21
 ```
 
 After a partition has been estimated, you can visualize the
@@ -143,8 +143,8 @@ plot(fit, parameter = "alpha")
 ``` r
 compute_posterior_intervals(fit, parameter = "alpha")
 #>     cluster parameter  mean median conf_level          hpdi central_interval
-#> 1 Cluster 1     alpha 5.402  5.478       95 % [4.561,6.661]    [4.271,6.468]
-#> 2 Cluster 2     alpha 1.544  1.452       95 % [0.305,2.660]    [0.531,3.337]
+#> 1 Cluster 1     alpha 4.303  4.529       95 % [1.316,5.790]    [1.038,5.628]
+#> 2 Cluster 2     alpha 1.406  1.280       95 % [0.166,3.026]    [0.326,4.318]
 ```
 
 # BayesMallows
