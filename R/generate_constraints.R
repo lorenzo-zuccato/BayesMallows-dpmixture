@@ -42,7 +42,6 @@ generate_constraints <- function(preferences, n_items, cl = NULL) {
 }
 
 
-
 constraint_fun <- function(x, n_items) {
   # Find out which items are constrained
   constrained_items <- unique(c(x[["bottom_item"]], x[["top_item"]]))

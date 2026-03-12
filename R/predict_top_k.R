@@ -41,7 +41,6 @@ predict_top_k <- local({
 })
 
 
-
 .predict_top_k <- function(model_fit, burnin, k) {
   rankings <- model_fit$augmented_data[model_fit$augmented_data$iteration > burnin &
     model_fit$augmented_data$value <= k, , drop = FALSE]

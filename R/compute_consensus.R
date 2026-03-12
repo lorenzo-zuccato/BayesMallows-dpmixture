@@ -38,8 +38,9 @@ compute_consensus <- function(model_fit, ...) {
 #' @export
 #' @family posterior quantities
 compute_consensus.BayesMallows <- function(
-    model_fit, type = "CP", burnin = model_fit$burnin, parameter = "rho",
-    assessors = 1L, ...) {
+  model_fit, type = "CP", burnin = model_fit$burnin, parameter = "rho",
+  assessors = 1L, ...
+) {
   if (is.null(burnin)) {
     stop("Please specify the burnin.")
   }
@@ -133,8 +134,9 @@ compute_consensus.BayesMallows <- function(
 #' @export
 #' @family posterior quantities
 compute_consensus.BayesMallowsDPMixture <- function(
-    model_fit, type = "CP", burnin = model_fit$burnin, parameter = "rho",
-    assessors = 1L, ...) {
+  model_fit, type = "CP", burnin = model_fit$burnin, parameter = "rho",
+  assessors = 1L, ...
+) {
   if (is.null(burnin)) {
     stop("Please specify the burnin.")
   }
@@ -145,7 +147,7 @@ compute_consensus.BayesMallowsDPMixture <- function(
   stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
 
   if (parameter == "Rtilde" &&
-      !inherits(model_fit$augmented_data, "data.frame")) {
+    !inherits(model_fit$augmented_data, "data.frame")) {
     stop("For augmented ranks, please refit model with option 'save_aug = TRUE'.")
   }
 
@@ -154,8 +156,9 @@ compute_consensus.BayesMallowsDPMixture <- function(
     df1 <- model_fit$rho[model_fit$rho$iteration > burnin, , drop = FALSE]
     df2 <- model_fit$cluster_assignment
     df2$cluster_partition <- rep(paste0("Cluster ", model_fit$partition$cl), nrow(model_fit$cluster_assignment) / model_fit$n_assessors)
-    df <- merge(df1, df2[df2$iteration > burnin , ],
-                by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
+    df <- merge(df1, df2[df2$iteration > burnin, ],
+      by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain")
+    )
 
     df$assessor <- NULL
     df$cluster <- NULL
@@ -181,7 +184,7 @@ compute_consensus.BayesMallowsDPMixture <- function(
   } else if (parameter == "Rtilde") {
     # Filter out the pre-burnin iterations and get the right assessors
     df <- model_fit$augmented_data[model_fit$augmented_data$iteration > burnin &
-                                     model_fit$augmented_data$assessor %in% assessors, , drop = FALSE]
+      model_fit$augmented_data$assessor %in% assessors, , drop = FALSE]
 
     # Find the problem dimensions
     n_rows <- length(unique(paste(df$assessor, df$item)))

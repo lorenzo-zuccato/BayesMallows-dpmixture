@@ -62,7 +62,7 @@ tidy_mcmc <- function(fits, rho_thinning, rankings, alpha_jump,
 
 
 tidy_mcmc_dpmixture <- function(fits, rho_thinning, rankings, alpha_jump,
-                      n_clusters, nmc, aug_thinning, n_items, clus_thin) {
+                                n_clusters, nmc, aug_thinning, n_items, clus_thin) {
   fit <- list()
 
   # Add names of item
@@ -118,7 +118,6 @@ tidy_mcmc_dpmixture <- function(fits, rho_thinning, rankings, alpha_jump,
 
   return(fit)
 }
-
 
 
 tidy_rho <- function(rho_mat, chain, rho_thinning, items) {
@@ -185,8 +184,9 @@ tidy_alpha <- function(alpha_mat, chain, alpha_jump) {
 }
 
 tidy_cluster_assignment <- function(
-    cluster_assignment, chain, n_clusters,
-    n_assessors, nmc, clus_thin) {
+  cluster_assignment, chain, n_clusters,
+  n_assessors, nmc, clus_thin
+) {
   if (n_clusters > 1) {
     cluster_dims <- dim(cluster_assignment)
     value <- paste("Cluster", cluster_assignment)

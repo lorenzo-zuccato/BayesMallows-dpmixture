@@ -25,16 +25,16 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
   }
   if (x$nmc <= burnin) stop("burnin must be <= nmc")
 
-  if(parameter == "n_clusters"){
+  if (parameter == "n_clusters") {
     df <- data.frame(n_clus = x$n_clusters[-seq(1, ceiling(burnin / x$clus_thin))])
 
     p <- ggplot2::ggplot(df, aes(n_clus)) +
-              ggplot2::geom_bar(aes(y = (after_stat(count))/sum(after_stat(count))), color = "darkblue", fill = "darkblue")  +
-              ggplot2::xlab("Number of non-empty clusters") +
-              ggplot2::scale_y_continuous(name = "Posterior probability",  breaks = c(0, 0.25, 0.5, 0.75, 1))
+      ggplot2::geom_bar(aes(y = (after_stat(count)) / sum(after_stat(count))), color = "darkblue", fill = "darkblue") +
+      ggplot2::xlab("Number of non-empty clusters") +
+      ggplot2::scale_y_continuous(name = "Posterior probability", breaks = c(0, 0.25, 0.5, 0.75, 1))
 
     return(p)
-  } else if(parameter == "co_clustering"){
+  } else if (parameter == "co_clustering") {
     co_clustering <- x$co_clustering
 
     if (is.null(co_clustering)) {
@@ -62,7 +62,7 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
       ggplot2::scale_y_discrete(breaks = order)
 
     return(p)
-  } else if(parameter == "alpha"){
+  } else if (parameter == "alpha") {
     if (is.null(x$partition)) {
       stop("model_fit$partition is missing. Please compute the partition wrt which conditioning with function partition_estimate.")
     }
@@ -70,8 +70,9 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
     df <- x$cluster_assignment
     df$partition <- rep(paste0("Cluster ", x$partition$cl), nrow(x$cluster_assignment) / x$n_assessors)
     df <- merge(x$alpha[(x$alpha$iteration > burnin), ],
-                df[df$iteration > burnin , ],
-                by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
+      df[df$iteration > burnin, ],
+      by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain")
+    )
 
     p <- ggplot2::ggplot(df, ggplot2::aes(x = .data$value)) +
       ggplot2::geom_density(na.rm = TRUE) +
@@ -83,7 +84,7 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
     }
 
     return(p)
-  } else if (parameter == "rho"){
+  } else if (parameter == "rho") {
     if (is.null(x$partition)) {
       stop("model_fit$partition is missing. Please compute the partition wrt which conditioning with function partition_estimate.")
     }
@@ -102,8 +103,9 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
     df <- x$cluster_assignment
     df$partition <- rep(paste0("Cluster ", x$partition$cl), nrow(x$cluster_assignment) / x$n_assessors)
     df <- merge(x$rho[x$rho$iteration > burnin & x$rho$item %in% items, , drop = FALSE],
-                df[df$iteration > burnin , ],
-                by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
+      df[df$iteration > burnin, ],
+      by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain")
+    )
 
     df <- aggregate(
       list(n = df$iteration),
@@ -111,7 +113,9 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
       FUN = length
     )
 
-    df$pct <- ave(df$n, df$cluster, df$item, FUN = function(x){x / sum(x)})
+    df$pct <- ave(df$n, df$cluster, df$item, FUN = function(x) {
+      x / sum(x)
+    })
 
     p <- ggplot2::ggplot(df, ggplot2::aes(x = .data$value, y = .data$pct)) +
       ggplot2::geom_col() +
@@ -125,7 +129,7 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
     }
 
     return(p)
-  } else if(parameter == "theta"){
+  } else if (parameter == "theta") {
     if (is.null(x$theta)) {
       stop("Please run compute_mallows with error_model = 'bernoulli'.")
     }
@@ -138,5 +142,7 @@ plot.BayesMallowsDPMixture <- function(x, burnin = x$burnin, parameter = "n_clus
       ggplot2::ylab("Posterior density")
 
     return(p)
-  } else stop("parameter must be either \"n_clusters\", \"co_clustering\", \"alpha\", \"rho\" or \"theta\".")
+  } else {
+    stop("parameter must be either \"n_clusters\", \"co_clustering\", \"alpha\", \"rho\" or \"theta\".")
+  }
 }

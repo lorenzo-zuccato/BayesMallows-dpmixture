@@ -1,5 +1,5 @@
 #' @export
-compute_co_clustering <- function(model_fit, burnin = model_fit$burnin){
+compute_co_clustering <- function(model_fit, burnin = model_fit$burnin) {
   stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
 
   if (is.null(burnin)) {
@@ -9,10 +9,10 @@ compute_co_clustering <- function(model_fit, burnin = model_fit$burnin){
 
   co_clus <- matrix(0, nrow = model_fit$n_assessors, ncol = model_fit$n_assessors)
 
-  m <- model_fit$cluster_assignment[model_fit$cluster_assignment$iteration > burnin , ]
-  for(iteration in unique(m$iteration)){
-    for(assessor1 in 1:model_fit$n_assessors){
-      data_iter <- m[m$iteration == iteration , ]
+  m <- model_fit$cluster_assignment[model_fit$cluster_assignment$iteration > burnin, ]
+  for (iteration in unique(m$iteration)) {
+    for (assessor1 in 1:model_fit$n_assessors) {
+      data_iter <- m[m$iteration == iteration, ]
       value <- data_iter$value[data_iter$assessor == assessor1]
       indices <- data_iter$assessor[data_iter$value == value]
       co_clus[assessor1, indices] <- co_clus[assessor1, indices] + 1

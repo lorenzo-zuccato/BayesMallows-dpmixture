@@ -63,7 +63,8 @@ plot.BayesMallows <- function(x, burnin = x$burnin, parameter = "alpha", items =
     p <- ggplot2::ggplot(df, ggplot2::aes(.data$value)) +
       ggplot2::geom_histogram(
         bins = x$n_items, ggplot2::aes(y = ggplot2::after_stat(density)),
-        fill = "black", col = "gray") +
+        fill = "black", col = "gray"
+      ) +
       ggplot2::xlab("rank") +
       ggplot2::ylab("Posterior probability")
 

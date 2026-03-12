@@ -47,9 +47,10 @@ compute_posterior_intervals <- function(model_fit, ...) {
 #' @export
 #' @family posterior quantities
 compute_posterior_intervals.BayesMallows <- function(
-    model_fit, burnin = model_fit$burnin,
-    parameter = "alpha",
-    level = 0.95, decimals = 3L, ...) {
+  model_fit, burnin = model_fit$burnin,
+  parameter = "alpha",
+  level = 0.95, decimals = 3L, ...
+) {
   stopifnot(inherits(model_fit, "BayesMallows"))
 
   if (is.null(burnin)) {
@@ -87,7 +88,6 @@ compute_posterior_intervals.BayesMallows <- function(
 }
 
 
-
 #' Compute posterior intervals
 #'
 #' @param model_fit An object of class \code{BayesMallowsDPMixture} returned from
@@ -109,9 +109,10 @@ compute_posterior_intervals.BayesMallows <- function(
 #' @export
 #' @family posterior quantities
 compute_posterior_intervals.BayesMallowsDPMixture <- function(
-    model_fit, burnin = model_fit$burnin,
-    parameter = "alpha",
-    level = 0.95, decimals = 3L, ...) {
+  model_fit, burnin = model_fit$burnin,
+  parameter = "alpha",
+  level = 0.95, decimals = 3L, ...
+) {
   stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
 
   if (is.null(burnin)) {
@@ -136,8 +137,9 @@ compute_posterior_intervals.BayesMallowsDPMixture <- function(
   df <- model_fit$cluster_assignment
   df$cluster_partition <- rep(paste0("Cluster ", model_fit$partition$cl), nrow(model_fit$cluster_assignment) / model_fit$n_assessors)
   df <- merge(model_fit[[parameter]][(model_fit[[parameter]]$iteration > burnin), ],
-                      df[df$iteration > burnin , ],
-                      by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain"))
+    df[df$iteration > burnin, ],
+    by.x = c("cluster", "iteration", "chain"), by.y = c("value", "iteration", "chain")
+  )
   df$assessor <- NULL
   df$cluster <- NULL
   df$chain <- NULL
@@ -148,7 +150,7 @@ compute_posterior_intervals.BayesMallowsDPMixture <- function(
     df <- .compute_posterior_intervals(split(df, f = df$cluster), parameter, level, decimals)
   } else if (parameter == "rho") {
     decimals <- 0
-   df <- .compute_posterior_intervals(
+    df <- .compute_posterior_intervals(
       split(df, f = interaction(df$cluster, df$item)),
       parameter, level, decimals,
       discrete = TRUE
@@ -181,8 +183,9 @@ compute_posterior_intervals.BayesMallowsDPMixture <- function(
 #'
 #' @example inst/examples/smc_post_processing_functions_example.R
 compute_posterior_intervals.SMCMallows <- function(
-    model_fit, parameter = "alpha", level = 0.95,
-    decimals = 3L, ...) {
+  model_fit, parameter = "alpha", level = 0.95,
+  decimals = 3L, ...
+) {
   if (length(parameter) > 1) stop("Only one parameter allowed.")
   parameter <- match.arg(
     parameter, c("alpha", "rho")

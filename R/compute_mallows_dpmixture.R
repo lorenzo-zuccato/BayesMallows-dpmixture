@@ -1,32 +1,31 @@
 #' @export
 compute_mallows_dpmixture <- function(rankings = NULL,
-                            preferences = NULL,
-                            obs_freq = NULL,
-                            metric = "footrule",
-                            error_model = NULL,
-                            clus_thin = 1L,
-                            nmc = 2000L,
-                            leap_size = max(1L, floor(n_items / 5)),
-                            swap_leap = 1L,
-                            rho_init = NULL,
-                            rho_thinning = 1L,
-                            alpha_prop_sd = 0.1,
-                            alpha_init = 1,
-                            alpha_jump = 1L,
-                            lambda = 0.1,
-                            alpha_max = 100,
-                            psi = 0.1,
-                            psi_init = 5,
-                            save_aug = FALSE,
-                            aug_thinning = 1L,
-                            logz_estimate = NULL,
-                            verbose = FALSE,
-                            validate_rankings = TRUE,
-                            na_action = "augment",
-                            constraints = NULL,
-                            save_ind_clus = FALSE,
-                            seed = NULL
-                            ) {
+                                      preferences = NULL,
+                                      obs_freq = NULL,
+                                      metric = "footrule",
+                                      error_model = NULL,
+                                      clus_thin = 1L,
+                                      nmc = 2000L,
+                                      leap_size = max(1L, floor(n_items / 5)),
+                                      swap_leap = 1L,
+                                      rho_init = NULL,
+                                      rho_thinning = 1L,
+                                      alpha_prop_sd = 0.1,
+                                      alpha_init = 1,
+                                      alpha_jump = 1L,
+                                      lambda = 0.1,
+                                      alpha_max = 100,
+                                      psi = 0.1,
+                                      psi_init = 5,
+                                      save_aug = FALSE,
+                                      aug_thinning = 1L,
+                                      logz_estimate = NULL,
+                                      verbose = FALSE,
+                                      validate_rankings = TRUE,
+                                      na_action = "augment",
+                                      constraints = NULL,
+                                      save_ind_clus = FALSE,
+                                      seed = NULL) {
   if (!is.null(seed)) set.seed(seed)
 
   # Check if there are NAs in rankings, if it is provided
@@ -138,33 +137,33 @@ compute_mallows_dpmixture <- function(rankings = NULL,
   logz_list <- prepare_partition_function(logz_estimate, metric, n_items)
 
   fits <- list(
-            run_mcmc_dpmixture(
-              rankings = t(rankings),
-              obs_freq = obs_freq,
-              nmc = nmc,
-              constraints = constraints,
-              cardinalities = logz_list$cardinalities,
-              logz_estimate = logz_list$logz_estimate,
-              rho_init = rho_init,
-              metric = metric,
-              error_model = ifelse(is.null(error_model), "none", error_model),
-              Lswap = swap_leap,
-              lambda = lambda,
-              alpha_max = alpha_max,
-              psi = psi,
-              psi_init = psi_init,
-              leap_size = leap_size,
-              alpha_prop_sd = alpha_prop_sd,
-              alpha_init = alpha_init,
-              alpha_jump = alpha_jump,
-              rho_thinning = rho_thinning,
-              aug_thinning = aug_thinning,
-              clus_thin = clus_thin,
-              save_aug = save_aug,
-              verbose = verbose,
-              kappa_1 = 1.0,
-              kappa_2 = 1.0
-              )
+    run_mcmc_dpmixture(
+      rankings = t(rankings),
+      obs_freq = obs_freq,
+      nmc = nmc,
+      constraints = constraints,
+      cardinalities = logz_list$cardinalities,
+      logz_estimate = logz_list$logz_estimate,
+      rho_init = rho_init,
+      metric = metric,
+      error_model = ifelse(is.null(error_model), "none", error_model),
+      Lswap = swap_leap,
+      lambda = lambda,
+      alpha_max = alpha_max,
+      psi = psi,
+      psi_init = psi_init,
+      leap_size = leap_size,
+      alpha_prop_sd = alpha_prop_sd,
+      alpha_init = alpha_init,
+      alpha_jump = alpha_jump,
+      rho_thinning = rho_thinning,
+      aug_thinning = aug_thinning,
+      clus_thin = clus_thin,
+      save_aug = save_aug,
+      verbose = verbose,
+      kappa_1 = 1.0,
+      kappa_2 = 1.0
+    )
   )
 
 
@@ -175,7 +174,8 @@ compute_mallows_dpmixture <- function(rankings = NULL,
   fit <- tidy_mcmc_dpmixture(
     fits, rho_thinning, rankings, alpha_jump,
     fits[[1]]$max_cluster_index, nmc, aug_thinning,
-    n_items, clus_thin)
+    n_items, clus_thin
+  )
 
   fit$save_aug <- save_aug
   fit$rho_thinning <- rho_thinning

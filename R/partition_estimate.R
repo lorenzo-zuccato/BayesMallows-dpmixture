@@ -1,5 +1,5 @@
 #' @export
-partition_estimate <- function(model_fit){
+partition_estimate <- function(model_fit) {
   stopifnot(inherits(model_fit, "BayesMallowsDPMixture"))
 
   co_clus <- model_fit$co_clustering
