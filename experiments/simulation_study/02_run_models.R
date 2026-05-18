@@ -32,7 +32,7 @@ result <- list()
 if (data_type == "top8") {
   result$dpm <- compute_mallows_dpmixture(
     rankings     = dataset,
-    nmc          = 10000,
+    nmc          = 50000,
     clus_thin    = 10,
     rho_thinning = 10,
     alpha_jump   = 10,
@@ -77,7 +77,7 @@ if (data_type == "top8") {
 # ── Compute co-clustering matrix and partition ────────────────────────────────
 
 # Burnin set conservatively to 25000; adjust based on trace plot inspection
-result$dpm$burnin    <- 5000
+result$dpm$burnin    <- 25000
 result$dpm$co_clustering <- compute_co_clustering(result$dpm)
 result$dpm$partition     <- partition_estimate(result$dpm)
 
