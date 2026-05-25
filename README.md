@@ -16,7 +16,7 @@ This version contains methods that are **currently undergoing peer
 review**. For the stable version of the package, please refer to the
 original repository.
 
-# New Methodology: Dirichlet-Process Mixture Model
+# Dirichlet-Process Mixture for the Bayesian Mallows Model
 
 This fork introduces a **Dirichlet-process mixture model** for the
 Mallows model, allowing for:

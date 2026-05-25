@@ -9,7 +9,7 @@ and pairwise preference data.
 
 Two observation formats are considered:
 
-- **top8**: aach assessor provides a top-k ranking of 30 items, where k averages 8
+- **top8**: each assessor provides a top-k ranking of 30 items, where k averages 8
 - **pref30**: each assessor provides on average 30 pairwise preferences among 30 items
 
 In both cases, 100 assessors are simulated from a mixture of three Mallows models with the
