@@ -18,11 +18,11 @@ load("data/data_movielens.RData")
 compute_probabilities <- function(result, deleted_preferences, ratings_pref, burnin) {
   augmented_data <- result$augmented_data[result$augmented_data$iteration > burnin, ]
   n_iterations   <- length(unique(augmented_data$iteration))
-  
+
   deleted_pref              <- deleted_preferences
   deleted_pref$bottom_item  <- paste0("Item ", deleted_pref$bottom_item)
   deleted_pref$top_item     <- paste0("Item ", deleted_pref$top_item)
-  
+
   probabilities <- inner_join(augmented_data, deleted_pref, by = "assessor") %>%
     filter(item == bottom_item | item == top_item) %>%
     group_by(assessor, iteration) %>%
@@ -35,7 +35,7 @@ compute_probabilities <- function(result, deleted_preferences, ratings_pref, bur
       prob = sum(count_meeting_criterion) / n_iterations,
       .groups = "drop"
     )
-  
+
   probabilities$number_preferences <- as.numeric(table(ratings_pref$assessor))
   return(probabilities)
 }
@@ -44,7 +44,7 @@ compute_probabilities <- function(result, deleted_preferences, ratings_pref, bur
 
 result_dpm <- compute_mallows_dpmixture(
   preferences   = ratings_pref,
-  nmc           = 5000,
+  nmc           = 200000,
   clus_thin     = 10,
   rho_thinning  = 10,
   alpha_jump    = 10,
@@ -57,11 +57,11 @@ result_dpm <- compute_mallows_dpmixture(
 )
 
 # Burnin set to 100000; adjust based on trace plot inspection
-result_dpm$burnin        <- 1000
+result_dpm$burnin        <- 100000
 result_dpm$co_clustering <- compute_co_clustering(result_dpm)
 result_dpm$partition     <- partition_estimate(result_dpm)
 
-prob_dpm <- compute_probabilities(result_dpm, deleted_preferences, ratings_pref, burnin = 1000)
+prob_dpm <- compute_probabilities(result_dpm, deleted_preferences, ratings_pref, burnin = 100000)
 
 save(result_dpm, file = "data/result_dpm.RData")
 cat("DPM3 done\n")
@@ -71,7 +71,7 @@ cat("DPM3 done\n")
 result_fm <- compute_mallows_mixtures(
   n_clusters    = 1:15,
   preferences   = ratings_pref,
-  nmc           = 5000,
+  nmc           = 300000,
   clus_thin     = 10,
   rho_thinning  = 10,
   alpha_jump    = 10,
@@ -82,7 +82,7 @@ result_fm <- compute_mallows_mixtures(
   alpha_prop_sd = 0.5
 )
 
-prob_fm <- compute_probabilities(result_fm[[2]], deleted_preferences, ratings_pref, burnin = 1000)
+prob_fm <- compute_probabilities(result_fm[[2]], deleted_preferences, ratings_pref, burnin = 100000)
 
 save(result_fm, file = "data/result_fm.RData")
 cat("FM done\n")

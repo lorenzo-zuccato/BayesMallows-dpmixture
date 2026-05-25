@@ -19,7 +19,7 @@ dir.create(plots_dir, showWarnings = FALSE)
 
 # ── Elbow plot (finite mixture) ───────────────────────────────────────────────
 
-elbow <- plot_elbow(result_fm[2:15], burnin = 1000) +
+elbow <- plot_elbow(result_fm[2:15], burnin = 100000) +
   theme_bw(base_size = 9)
 
 ggsave(
@@ -117,7 +117,7 @@ make_boxplot <- function(df) {
   df$preferences_range <- cut(df$number_preferences, breaks = custom_breaks,
                               labels = as.character(seq(1, length(custom_breaks) - 1)))
   df_long <- df
-  
+
   boxplot_plot <- ggplot(df_long, aes(x = factor(preferences_range), y = prob)) +
     geom_boxplot(fill = "lightgrey") +
     labs(x = "Number of preferences",
@@ -128,7 +128,7 @@ make_boxplot <- function(df) {
     theme(
       axis.text.x = element_text(angle = 45, hjust = 1, size = 7)
     )
-  
+
   histogram_plot <- ggplot(df_long, aes(x = prob)) +
     geom_histogram(bins = 20, fill = "darkgrey", color = "black") +
     theme_bw(base_size = 9) +
@@ -139,7 +139,7 @@ make_boxplot <- function(df) {
       axis.title.x = element_blank()
     ) +
     coord_flip()
-  
+
   patchwork::wrap_plots(boxplot_plot, histogram_plot, ncol = 2, widths = c(8, 2))
 }
 
